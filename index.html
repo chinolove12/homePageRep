@@ -11,6 +11,16 @@
       padding: 20px;
     }
 
+    .board, .image, .description {
+      border: 1px solid #ccc;
+      padding: 15px;
+      border-radius: 8px;
+      background-color: #f9f9f9;
+    }
+
+    .boad{
+      width: 250px;
+    }
     .container img {
       width: 800px;
       height: auto;
@@ -30,12 +40,37 @@
   <p>あなたは7番目の訪問者です！。</p>
   <p><a href="2ch.html">掲示板へ</a></p>
     <div class="container">
+      <div class="2ch">
+        <h1>簡易掲示板</h1>
+
+        <div id="posts">
+          <!-- 投稿がここに追加されます -->
+        </div>
+
+        <input type="text" id="name" placeholder="名前" style="width: 120px;">
+        <input type="text" id="message" placeholder="メッセージを入力" style="width: 300px;">
+        <button onclick="addPost()">投稿</button>
+      </div>
       <img src="kame.jpg" alt="かめさん">
       <div class="description">
         <h2>カメについて</h2>
         <p>これはカメの写真です。のんびり歩くカメは、昔話にもよく登場します。甲羅がとても頑丈です。</p>
       </div>
     </div>
+        <script>
+          function addPost() {
+            const name = document.getElementById('name').value.trim();
+            const message = document.getElementById('message').value.trim();
+            if (!message) return;
+
+            const post = document.createElement('div');
+            post.className = 'post';
+            post.innerHTML = `<strong>${name || '名無し'}：</strong> ${message}`;
+            document.getElementById('posts').prepend(post);
+
+            document.getElementById('message').value = '';
+          }
+        </script>
 
 </body>
 </html>
