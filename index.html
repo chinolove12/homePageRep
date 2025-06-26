@@ -83,6 +83,13 @@
             log.innerHTML = data.reverse().map(d =>
               `<p><strong>${d.name}</strong>：${d.message}</p>`
             ).join("");
+
+          const post = document.createElement('div');
+          post.className = 'post';
+          post.innerHTML = `<strong>${name || '名無し'}：</strong> ${message}`;
+          document.getElementById('posts').prepend(post);
+
+          document.getElementById('message').value = '';
           }
 
         loadMessages();
