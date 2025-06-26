@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>スプレッドシート掲示板</title>
+</head>
+<body>
+  <h1>掲示板</h1>
+
+  <input type="text" id="name" placeholder="名前">
+  <input type="text" id="message" placeholder="メッセージ">
+  <button onclick="postMessage()">投稿</button>
+
+  <div id="log"></div>
+
+  <script>
+    const sheetURL = "https://script.google.com/macros/s/AKfycbwYf1wK4QsOPc3OkfNA8KPl14-rf_LyaAAgHZ38bGJpW2-Ep2I71plnggFjJO7xkCJuEg/exec"; 
+
+    async function postMessage() {
+      const name = document.getElementById("name").value || "匿名";
+      const message = document.getElementById("message").value;
+      if (!message) return alert("メッセージを入力してください");
+
+      await fetch(sheetURL, {
+        method: "POST",
+        body: JSON.stringify({ name, message }),
+        headers: { "Content-Type": "application/json" }
+      });
+
+      loadMessages();
+    }
+
+    async function loadMessages() {
+      const res = await fetch(sheetURL);
+      const data = await res.json();
+
+      const log = document.getElementById("log");
+      log.innerHTML = data.reverse().map(d =>
+        `<p><strong>${d.name}</strong>：${d.message}</p>`
+      ).join("");
+    }
+
+    loadMessages();
+  </script>
+</body>
+</html>

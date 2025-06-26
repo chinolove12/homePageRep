@@ -11,16 +11,13 @@
       padding: 20px;
     }
 
-    .board, .image, .description {
+    .image, .description {
       border: 1px solid #ccc;
       padding: 15px;
       border-radius: 8px;
       background-color: #f9f9f9;
     }
 
-    .boad{
-      width: 250px;
-    }
     .container img {
       width: 800px;
       height: auto;
@@ -40,60 +37,12 @@
   <p>あなたは7番目の訪問者です！。</p>
   <p><a href="2ch.html">掲示板へ</a></p>
     <div class="container">
-      <div class="2ch">
-        <h1>簡易掲示板</h1>
-
-        <div id="log">
-          <!-- 投稿がここに追加されます -->
-        </div>
-
-        <input type="text" id="name" placeholder="名前" style="width: 120px;">
-        <input type="text" id="message" placeholder="メッセージを入力" style="width: 300px;">
-        <button onclick="addPost()">投稿</button>
-      </div>
       <img src="kame.jpg" alt="かめさん">
       <div class="description">
         <h2>カメについて</h2>
         <p>これはカメの写真です。のんびり歩くカメは、昔話にもよく登場します。甲羅がとても頑丈です。</p>
       </div>
     </div>
-
-        <script>
-          const sheetURL = "https://script.google.com/macros/s/AKfycbwYf1wK4QsOPc3OkfNA8KPl14-rf_LyaAAgHZ38bGJpW2-Ep2I71plnggFjJO7xkCJuEg/exec"
-          async function addPost() {
-
-            const name = document.getElementById('name').value || "匿名";
-            const message = document.getElementById('message').value;
-            if (!message) return alert("メッセージを入力してください。");
-
-            await fetch(sheetURL, {
-            method: "POST",
-            body: JSON.stringify({ name, message }),
-            headers: { "Content-Type": "application/json" }
-            });
-
-            loadMessages();
-           }
-
-          async function loadMessages() {
-            const res = await fetch(sheetURL);
-            const data = await res.json();
-
-            const log = document.getElementById("log");
-            log.innerHTML = data.reverse().map(d =>
-              `<p><strong>${d.name}</strong>：${d.message}</p>`
-            ).join("");
-
-          const post = document.createElement('div');
-          post.className = 'post';
-          post.innerHTML = `<strong>${name || '名無し'}：</strong> ${message}`;
-          document.getElementById('posts').prepend(post);
-
-          document.getElementById('message').value = '';
-          }
-
-        loadMessages();
-        </script>
 
 </body>
 </html>
