@@ -2,11 +2,52 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>筒井大翔公式サイト</title>
+  <title>簡易掲示板</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+    }
+    #posts {
+      border: 1px solid #ccc;
+      padding: 10px;
+      max-width: 500px;
+      margin-bottom: 20px;
+    }
+    .post {
+      background: #f9f9f9;
+      padding: 10px;
+      margin-bottom: 8px;
+      border-radius: 5px;
+    }
+  </style>
 </head>
-
 <body>
-  <h1>ここは掲示板</h1>
-  <p><a href="index.html">戻る</a></p>
+
+  <h1>簡易掲示板</h1>
+
+  <div id="posts">
+    <!-- 投稿がここに追加されます -->
+  </div>
+
+  <input type="text" id="name" placeholder="名前" style="width: 120px;">
+  <input type="text" id="message" placeholder="メッセージを入力" style="width: 300px;">
+  <button onclick="addPost()">投稿</button>
+
+  <script>
+    function addPost() {
+      const name = document.getElementById('name').value.trim();
+      const message = document.getElementById('message').value.trim();
+      if (!message) return;
+
+      const post = document.createElement('div');
+      post.className = 'post';
+      post.innerHTML = `<strong>${name || '名無し'}：</strong> ${message}`;
+      document.getElementById('posts').prepend(post);
+
+      document.getElementById('message').value = '';
+    }
+  </script>
+
 </body>
 </html>
