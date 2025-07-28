@@ -23,6 +23,18 @@
       const message = document.getElementById("message").value;
       if (!message) return alert("メッセージを入力してください");
 
+  const params = new URLSearchParams();
+  params.append("name", name);
+  params.append("message", message);
+
+  await fetch(sheetURL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
+    },
+    body: params.toString()
+  });
+      /*
       await fetch(sheetURL, {
         method: "POST",
         body: JSON.stringify({ name, message }),
@@ -31,7 +43,7 @@
       .then(response => response.json())
       .then(data => console.log(data))
       .catch(error => console.error("Fetch error:", error));
-      
+      */
       loadMessages();
     }
 
