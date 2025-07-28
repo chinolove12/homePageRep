@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>100で割る計算</title>
+</head>
+<body>
+  <h2>数字を入力してください</h2>
+  <input type="number" id="inputNumber" placeholder="例：500">
+  <button onclick="divideBy100()">計算</button>
+
+  <p id="result"></p>
+
+  <script>
+    function divideBy100() {
+      const input = document.getElementById("inputNumber").value;
+      const number = parseFloat(input);
+
+      if (isNaN(number)) {
+        document.getElementById("result").textContent = "有効な数字を入力してください。";
+        return;
+      }
+
+      const result = number / 100;
+      document.getElementById("result").textContent = `${number} ÷ 100 = ${result}`;
+    }
+  </script>
+</body>
+</html>
