@@ -53,7 +53,7 @@
 
       const log = document.getElementById("log");
       log.innerHTML = data.reverse().map(d =>
-        `<p><strong>${d.name}</strong>：${d.message}</p>`
+        `<p>[<strong>${d.time}]<strong>${d.name}</strong>：${d.message}</p>`
       ).join("");
     }
 
