@@ -27,41 +27,41 @@
     }
 
     h1 {
-      font-size: 36px;
-      margin-top: 40px;
-      text-shadow: 0 2px 4px black;
+      font-size: 72px; /* 2倍に拡大 */
+      margin-top: 80px;
+      text-shadow: 0 4px 8px black;
     }
 
     form {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 20px;
-      margin-top: 40px;
+      gap: 40px; /* 2倍の余白 */
+      margin-top: 80px;
       padding: 0 20px;
     }
 
     input[type="number"], input[type="text"], input[type="date"] {
       width: 90%;
-      max-width: 300px;
-      padding: 16px;
-      font-size: 20px;
-      border-radius: 10px;
+      max-width: 600px; /* 2倍サイズ */
+      padding: 32px;     /* 縦横余白2倍 */
+      font-size: 40px;   /* 2倍文字サイズ */
+      border-radius: 20px;
       border: none;
       text-align: center;
     }
 
     button {
       width: 90%;
-      max-width: 300px;
-      padding: 40px 0;
-      font-size: 24px;
+      max-width: 600px; /* 2倍サイズ */
+      padding: 80px 0;  /* 2倍高さ */
+      font-size: 48px;  /* 文字も2倍 */
       font-weight: bold;
       background-color: rgba(76,175,80,0.9);
       color: white;
       border: none;
-      border-radius: 12px;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+      border-radius: 24px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.4);
       cursor: pointer;
       transition: 0.2s;
     }
