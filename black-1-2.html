@@ -24,6 +24,7 @@
       border-collapse: collapse;
       background-color: white;
       box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      table-layout: fixed; /* 横幅を均等に */
     }
 
     th, td {
@@ -31,13 +32,19 @@
       padding: 12px 16px;
       text-align: center;
       font-size: 20px;
+      overflow-wrap: break-word;
     }
 
-    th.black { background-color: black; color: white; }
+    /* ヘッダー色 */
     th.red { background-color: red; color: white; }
+    th.black { background-color: black; color: white; }
     th.blue { background-color: blue; color: white; }
     th.mixed { 
       background: linear-gradient(to right, red 50%, blue 50%); 
+      color: white;
+    }
+    th.poop { 
+      background: linear-gradient(to right, red 50%, black 50%); 
       color: white;
     }
 
@@ -74,7 +81,7 @@
     <thead>
       <tr>
         <th>出目</th>
-        <th>💩</th>
+        <th class="poop">💩</th>
         <th class="red">赤</th>
         <th class="black">黒</th>
         <th class="blue">青</th>
