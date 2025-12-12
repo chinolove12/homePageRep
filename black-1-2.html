@@ -20,7 +20,7 @@
     table {
       width: 100%;
       max-width: 1000px;
-      margin: 0 auto;
+      margin: 0 auto 40px auto;
       border-collapse: collapse;
       background-color: white;
       box-shadow: 0 4px 8px rgba(0,0,0,0.2);
@@ -40,6 +40,15 @@
 
     tr:nth-child(even) {
       background-color: #f9f9f9;
+    }
+
+    /* カラムごとの色指定 */
+    td.black { background-color: black; color: white; }
+    td.red { background-color: red; color: white; }
+    td.blue { background-color: blue; color: white; }
+    td.mixed { 
+      background: linear-gradient(to right, red 50%, blue 50%); 
+      color: white;
     }
 
     .back-btn {
@@ -72,77 +81,40 @@
       <tr>
         <th>出目</th>
         <th>💩</th>
-        <th>赤</th>
-        <th>黒</th>
-        <th>青</th>
-        <th>異色</th>
+        <th class="red">赤</th>
+        <th class="black">黒</th>
+        <th class="blue">青</th>
+        <th class="mixed">異色</th>
       </tr>
     </thead>
     <tbody>
       <tr>
         <td>綺麗</td>
         <td>a,b</td>
-        <td>d</td>
-        <td>a,c,d</td>
-        <td>d</td>
+        <td class="red">d</td>
+        <td class="black">a,c,d</td>
+        <td class="blue">d</td>
+        <td class="mixed">a,b,c</td>
       </tr>
       <tr>
         <td>逆転</td>
         <td>b,c</td>
-        <td>a</td>
-        <td>b,d</td>
-        <td>c</td>
+        <td class="red">a</td>
+        <td class="black">b,d</td>
+        <td class="blue">c</td>
+        <td class="mixed">d,e</td>
       </tr>
       <tr>
         <td>無し</td>
         <td>c</td>
-        <td>b,d</td>
-        <td>c</td>
-        <td>a</td>
+        <td class="red">b,d</td>
+        <td class="black">c</td>
+        <td class="blue">a</td>
+        <td class="mixed">b,c</td>
       </tr>
-      <!-- ここにさらに行を追加可能 -->
     </tbody>
   </table>
 
-  <h2>０滑り</h2>
-
-  <table>
-    <thead>
-      <tr>
-        <th>出目</th>
-        <th>💩</th>
-        <th>赤</th>
-        <th>黒</th>
-        <th>青</th>
-        <th>異色</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>綺麗</td>
-        <td>a,b</td>
-        <td>d</td>
-        <td>a,c,d</td>
-        <td>d</td>
-      </tr>
-      <tr>
-        <td>逆転</td>
-        <td>b,c</td>
-        <td>a</td>
-        <td>b,d</td>
-        <td>c</td>
-      </tr>
-      <tr>
-        <td>無し</td>
-        <td>c</td>
-        <td>b,d</td>
-        <td>c</td>
-        <td>a</td>
-      </tr>
-      <!-- ここにさらに行を追加可能 -->
-    </tbody>
-  </table>
-  
   <a href="tool.html" class="back-btn">戻る</a>
 
 </body>
