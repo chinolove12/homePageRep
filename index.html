@@ -3,85 +3,82 @@
 <head>
   <meta charset="UTF-8">
   <title>筒井大翔公式サイト</title>
-    <style>
-    .container {
-      display: flex;
-      align-items: flex-start;
-      gap: 20px; /* 要素の間のスペース */
-      padding: 20px;
+  <style>
+
+    /* 画面全体に背景画像 */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+      background: url("kame.jpg") no-repeat center center/cover;
+      height: 100vh;
+      color: white;
+      text-align: center;
+
+      /* 背景を暗くして文字を見やすく */
+      position: relative;
     }
 
-    .container {
-      display: flex;
-      align-items: flex-start;
-      gap: 20px;
-      padding: 20px;
-      flex-wrap: wrap; /* 横幅が足りないと自動で折り返す */
+    /* 暗いオーバーレイ */
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.45);
+      z-index: -1;
     }
-    
-    .container img {
-      width: 80%;   /* スマホで大きすぎない */
-      max-width: 800px;
-      height: auto;
-      border-radius: 8px;
+
+    h1 {
+      margin-top: 40px;
+      font-size: 24px;
+      text-shadow: 0 2px 4px black;
     }
-    
-    /* スマホ用レイアウト（幅600px以下のとき縦並び） */
-    @media screen and (max-width: 600px) {
-      .container {
-        flex-direction: column;
-        align-items: center; /* 中央寄せ */
-      }
-    
-      .description {
-        max-width: 90%; /* スマホで横いっぱいに */
-      }
-    }
-      
+
     .menu {
-      margin: 20px 0;
+      margin-top: 40px;
       display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      padding: 0 20px;
     }
-    
+
+    /* スマホ向けの大きいボタン */
     .menu a {
-      display: inline-block;
-      padding: 10px 18px;
-      background-color: #4CAF50;
+      width: 100%;
+      max-width: 340px;
+      padding: 16px 0;
+      background-color: rgba(76,175,80,0.9);
       color: white;
       text-decoration: none;
-      border-radius: 6px;
+      border-radius: 12px;
+      font-size: 18px;
       font-weight: bold;
-      transition: 0.25s;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+      transition: 0.2s;
     }
-    
+
     .menu a:hover {
-      background-color: #45a049;
-      transform: translateY(-2px);
+      background-color: rgba(69,160,73,1);
+      transform: translateY(-3px);
     }
 
   </style>
 </head>
 
 <body>
-    <h1>筒井大翔公式ホームページへようこそ！</h1>
-    <p>あなたは9番目の訪問者です！。</p>
-    
-    <div class="menu">
-      <a href="2ch.html">掲示板へ</a>
-      <a href="5ch.html">マルチ掲示板へ</a>
-      <a href="tool.html">当選確率計算ツール</a>
-      <a href="hanabi.html">副業作業日報</a>
-    </div>
-  
-    <div class="container">
-      <img src="kame.jpg" alt="かめさん">
-      <div class="description">
-        <h2>カメについて</h2>
-        <p>これはカメの写真です。のんびり歩くカメは、昔話にもよく登場します。甲羅がとても頑丈です。</p>
-      </div>
-    </div>
+
+  <h1>筒井大翔公式ホームページ</h1>
+
+  <div class="menu">
+    <a href="2ch.html">掲示板へ</a>
+    <a href="5ch.html">マルチ掲示板へ</a>
+    <a href="tool.html">当選確率計算ツール</a>
+    <a href="hanabi.html">副業作業日報</a>
+  </div>
 
 </body>
 </html>
