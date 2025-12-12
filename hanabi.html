@@ -88,5 +88,31 @@
     <button type="submit">送信</button>
   </form>
 
+  <script>
+  const form = document.getElementById('hanabiForm');
+  form.addEventListener('submit', e => {
+    e.preventDefault(); // ページ遷移を防ぐ
+
+    const formData = new FormData(form);
+    const data = {
+      date: formData.get('date'),
+      rotations: formData.get('rotations'),
+      big: formData.get('big'),
+      reg: formData.get('reg'),
+      difference: formData.get('difference'),
+      bita: formData.get('bita')
+    };
+
+    // ← ここが GAS に送信する fetch の部分
+    fetch('https://script.google.com/macros/s/YOUR_DEPLOY_ID/exec', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(res => alert(res.message))
+    .catch(err => alert('送信失敗: ' + err));
+  });
+</script>
+  
 </body>
 </html>
