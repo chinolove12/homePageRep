@@ -11,25 +11,33 @@
       padding: 20px;
     }
 
-    .image, .description {
-      border: 1px solid #ccc;
-      padding: 15px;
-      border-radius: 8px;
-      background-color: #f9f9f9;
+    .container {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      padding: 20px;
+      flex-wrap: wrap; /* 横幅が足りないと自動で折り返す */
     }
-
+    
     .container img {
-      width: 800px;
+      width: 80%;   /* スマホで大きすぎない */
+      max-width: 800px;
       height: auto;
       border-radius: 8px;
     }
-
-    .description {
-      font-size: 16px;
-      line-height: 1.6;
-      max-width: 400px;
+    
+    /* スマホ用レイアウト（幅600px以下のとき縦並び） */
+    @media screen and (max-width: 600px) {
+      .container {
+        flex-direction: column;
+        align-items: center; /* 中央寄せ */
+      }
+    
+      .description {
+        max-width: 90%; /* スマホで横いっぱいに */
+      }
     }
-
+      
     .menu {
       margin: 20px 0;
       display: flex;
