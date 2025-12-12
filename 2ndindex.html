@@ -54,6 +54,30 @@
       transform: translateY(-3px);
     }
 
+   .back-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 50%;            /* 画面の半分くらい */
+      max-width: 400px;      /* 任意で調整 */
+      padding: 40px 0;       /* 高さ調整 */
+      font-size: 36px;       /* 文字サイズ大きく */
+      font-weight: bold;
+      text-align: center;
+      background-color: rgba(76,175,80,0.9);
+      color: white;
+      text-decoration: none;
+      border-radius: 24px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+      transition: 0.2s;
+      z-index: 100;
+    }
+  
+    .back-btn:hover {
+      background-color: rgba(69,160,73,1);
+      transform: translateY(-2px);
+    }
+
   </style>
 </head>
 
@@ -64,8 +88,9 @@
     <a href="black-1-1.html">黒上</a>
     <a href="red-1-2.html">赤中</a>
 
-    <!-- ホームに戻る -->
-    <a href="index.html" style="background-color: rgba(0,0,0,0.6);">ホームに戻る</a>
+    <!-- 戻るボタン -->
+    <a href="index.html" class="back-btn">戻る</a>
+    
   </div>
 
 </body>
