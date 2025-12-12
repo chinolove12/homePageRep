@@ -29,16 +29,43 @@
       line-height: 1.6;
       max-width: 400px;
     }
+
+    .menu {
+      margin: 20px 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    
+    .menu a {
+      display: inline-block;
+      padding: 10px 18px;
+      background-color: #4CAF50;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: bold;
+      transition: 0.25s;
+    }
+    
+    .menu a:hover {
+      background-color: #45a049;
+      transform: translateY(-2px);
+    }
+
   </style>
 </head>
 
 <body>
-  <h1>筒井大翔公式ホームページへようこそ！</h1>
-  <p>あなたは9番目の訪問者です！。</p>
-  <p><a href="2ch.html">掲示板へ</a></p>
-<p><a href="5ch.html">マルチ掲示板へ</a></p>
-<p><a href="tool.html">当選確率計算ツール</a></p>
-<p><a href="hanabi.html">副業作業日報</a></p>
+    <h1>筒井大翔公式ホームページへようこそ！</h1>
+    <p>あなたは9番目の訪問者です！。</p>
+    
+    <div class="menu">
+      <a href="2ch.html">掲示板へ</a>
+      <a href="5ch.html">マルチ掲示板へ</a>
+      <a href="tool.html">当選確率計算ツール</a>
+      <a href="hanabi.html">副業作業日報</a>
+    </div>
   
     <div class="container">
       <img src="kame.jpg" alt="かめさん">
