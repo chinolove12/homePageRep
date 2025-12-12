@@ -33,22 +33,16 @@
       font-size: 20px;
     }
 
-    th {
-      background-color: #4CAF50;
-      color: white;
-    }
-
-    tr:nth-child(even) {
-      background-color: #f9f9f9;
-    }
-
-    /* カラムごとの色指定 */
-    td.black { background-color: black; color: white; }
-    td.red { background-color: red; color: white; }
-    td.blue { background-color: blue; color: white; }
-    td.mixed { 
+    th.black { background-color: black; color: white; }
+    th.red { background-color: red; color: white; }
+    th.blue { background-color: blue; color: white; }
+    th.mixed { 
       background: linear-gradient(to right, red 50%, blue 50%); 
       color: white;
+    }
+
+    tr:nth-child(even) td {
+      background-color: #f9f9f9; /* データ行は白と薄グレーの交互 */
     }
 
     .back-btn {
@@ -91,26 +85,26 @@
       <tr>
         <td>綺麗</td>
         <td>a,b</td>
-        <td class="red">d</td>
-        <td class="black">a,c,d</td>
-        <td class="blue">d</td>
-        <td class="mixed">a,b,c</td>
+        <td>d</td>
+        <td>a,c,d</td>
+        <td>d</td>
+        <td>a,b,c</td>
       </tr>
       <tr>
         <td>逆転</td>
         <td>b,c</td>
-        <td class="red">a</td>
-        <td class="black">b,d</td>
-        <td class="blue">c</td>
-        <td class="mixed">d,e</td>
+        <td>a</td>
+        <td>b,d</td>
+        <td>c</td>
+        <td>d,e</td>
       </tr>
       <tr>
         <td>無し</td>
         <td>c</td>
-        <td class="red">b,d</td>
-        <td class="black">c</td>
-        <td class="blue">a</td>
-        <td class="mixed">b,c</td>
+        <td>b,d</td>
+        <td>c</td>
+        <td>a</td>
+        <td>b,c</td>
       </tr>
     </tbody>
   </table>
