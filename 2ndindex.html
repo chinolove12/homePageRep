@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>ツールページ</title>
-    <style>
-
+  <style>
+    /* 背景・全体設定 */
     body {
       margin: 0;
       padding: 0;
@@ -27,6 +27,7 @@
       z-index: -1;
     }
 
+    /* メニュー用ボタン */
     .menu {
       margin-top: 60px;
       display: flex;
@@ -54,14 +55,15 @@
       transform: translateY(-3px);
     }
 
-   .back-btn {
+    /* 戻るボタン */
+    .back-btn {
       position: fixed;
       bottom: 20px;
       right: 20px;
       width: 50%;            /* 画面の半分くらい */
-      max-width: 400px;      /* 任意で調整 */
-      padding: 40px 0;       /* 高さ調整 */
-      font-size: 36px;       /* 文字サイズ大きく */
+      max-width: 400px;
+      padding: 40px 0;
+      font-size: 36px;
       font-weight: bold;
       text-align: center;
       background-color: rgba(76,175,80,0.9);
@@ -72,26 +74,37 @@
       transition: 0.2s;
       z-index: 100;
     }
-  
+
     .back-btn:hover {
       background-color: rgba(69,160,73,1);
       transform: translateY(-2px);
     }
 
+    /* スマホ対応：画面幅が小さいときは余白調整 */
+    @media screen and (max-width: 600px) {
+      .menu a {
+        padding: 80px 0;
+        font-size: 28px;
+      }
+      .back-btn {
+        padding: 30px 0;
+        font-size: 28px;
+      }
+    }
   </style>
 </head>
 
 <body>
 
+  <!-- メニュー -->
   <div class="menu">
     <a href="black-1-1.html">黒中</a>
     <a href="black-1-1.html">黒上</a>
     <a href="red-1-2.html">赤中</a>
-
-    <!-- 戻るボタン -->
-    <a href="index.html" class="back-btn">戻る</a>
-    
   </div>
+
+  <!-- 戻るボタン（menu の外） -->
+  <a href="index.html" class="back-btn">戻る</a>
 
 </body>
 </html>
