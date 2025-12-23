@@ -1,53 +1,187 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <title>筒井大翔公式サイト</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      padding: 20px;
-    }
-    #posts {
-      border: 1px solid #ccc;
-      padding: 10px;
-      max-width: 500px;
-      margin-bottom: 20px;
-    }
-    .post {
-      background: #f9f9f9;
-      padding: 10px;
-      margin-bottom: 8px;
-      border-radius: 5px;
-    }
-  </style>
-</head>
-<body>
-<p><a href="index.html">戻る</a></p>
-  <h1>簡易掲示板</h1>
+<meta charset="UTF-8">
+<title>当選履歴入力</title>
 
-  <div id="posts">
-    <!-- 投稿がここに追加されます -->
+<style>
+/* ===== 背景（公式サイトと同じ雰囲気） ===== */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  background: url("kame.jpg") no-repeat center center/cover;
+  height: 100vh;
+  color: white;
+  text-align: center;
+  position: relative;
+}
+
+/* 暗いオーバーレイ */
+body::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: -1;
+}
+
+h1 {
+  margin-top: 30px;
+  font-size: 36px;
+  text-shadow: 0 2px 4px black;
+}
+
+/* ===== 入力フォーム ===== */
+.form-box {
+  width: 90%;
+  max-width: 700px;
+  margin: 20px auto;
+  padding: 20px;
+  background: rgba(0,0,0,0.6);
+  border-radius: 14px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.6);
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  margin: 10px 0;
+}
+
+label {
+  font-size: 18px;
+  margin-bottom: 4px;
+}
+
+input, select, textarea {
+  padding: 10px;
+  font-size: 18px;
+  border-radius: 8px;
+  border: none;
+}
+
+/* 追加ボタン */
+button {
+  width: 100%;
+  padding: 14px;
+  margin-top: 20px;
+  font-size: 22px;
+  font-weight: bold;
+  border-radius: 12px;
+  border: none;
+  background: rgba(76,175,80,0.9);
+  color: white;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.6);
+}
+button:hover {
+  background: rgba(69,160,73,1);
+  transform: translateY(-2px);
+}
+
+/* ===== 履歴一覧 ===== */
+.history {
+  width: 90%;
+  max-width: 800px;
+  margin: 20px auto 60px auto;
+}
+
+.record {
+  text-align: left;
+  background: rgba(255,255,255,0.9);
+  color: black;
+  padding: 14px;
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.5);
+  margin-bottom: 12px;
+}
+
+.record strong {
+  font-size: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>当選履歴入力</h1>
+
+<div class="form-box">
+
+  <div class="form-row">
+    <label>回転数</label>
+    <input id="spin" type="number" placeholder="例: 123">
   </div>
 
-  <input type="text" id="name" placeholder="名前" style="width: 120px;">
-  <input type="text" id="message" placeholder="メッセージを入力" style="width: 300px;">
-  <button onclick="addPost()">投稿</button>
+  <div class="form-row">
+    <label>当選役</label>
+    <select id="bonus">
+      <option value="">選択してください</option>
+      <option>BIG</option>
+      <option>REG</option>
+      <option>AT</option>
+      <option>RB</option>
+      <option>その他</option>
+    </select>
+  </div>
 
-  <script>
-    function addPost() {
-      const name = document.getElementById('name').value.trim();
-      const message = document.getElementById('message').value.trim();
-      if (!message) return;
+  <div class="form-row">
+    <label>当選契機</label>
+    <select id="trigger">
+      <option value="">選択してください</option>
+      <option>チェリー</option>
+      <option>スイカ</option>
+      <option>チャンス目</option>
+      <option>単独</option>
+      <option>リーチ目</option>
+      <option>その他</option>
+    </select>
+  </div>
 
-      const post = document.createElement('div');
-      post.className = 'post';
-      post.innerHTML = `<strong>${name || '名無し'}：</strong> ${message}`;
-      document.getElementById('posts').prepend(post);
+  <div class="form-row">
+    <label>メモ</label>
+    <textarea id="memo" rows="3" placeholder="自由にメモを書けます"></textarea>
+  </div>
 
-      document.getElementById('message').value = '';
-    }
-  </script>
+  <button onclick="addRecord()">追加する</button>
+</div>
+
+<h2>当選履歴</h2>
+<div class="history" id="history"></div>
+
+<script>
+// ===== レコード追加処理 =====
+function addRecord() {
+  const spin = document.getElementById("spin").value;
+  const bonus = document.getElementById("bonus").value;
+  const trigger = document.getElementById("trigger").value;
+  const memo = document.getElementById("memo").value;
+
+  if(!spin || !bonus || !trigger){
+    alert("回転数・当選役・当選契機は必須です！");
+    return;
+  }
+
+  const history = document.getElementById("history");
+
+  const div = document.createElement("div");
+  div.className = "record";
+
+  div.innerHTML = `
+    <strong>${spin}G</strong><br>
+    🎰 当選役：${bonus}<br>
+    🎯 契機：${trigger}<br>
+    📝 メモ：${memo || "（なし）"}
+  `;
+
+  history.prepend(div); // 上に積んでいく
+  document.getElementById("spin").value = "";
+  document.getElementById("bonus").value = "";
+  document.getElementById("trigger").value = "";
+  document.getElementById("memo").value = "";
+}
+</script>
 
 </body>
 </html>
