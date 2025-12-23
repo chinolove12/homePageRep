@@ -1,82 +1,154 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <title>筒井大翔公式サイト</title>
-  <style>
+<meta charset="UTF-8">
+<title>月間カレンダー</title>
 
-    /* 画面全体に背景画像 */
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: sans-serif;
-      background: url("kame.jpg") no-repeat center center/cover;
-      height: 100vh;
-      color: white;
-      text-align: center;
+<style>
+  body {
+    margin:0;
+    padding:0;
+    font-family:sans-serif;
+    background:url("kame.jpg") no-repeat center center/cover;
+    height:100vh;
+    color:white;
+    text-align:center;
+    position:relative;
+  }
 
-      /* 背景を暗くして文字を見やすく */
-      position: relative;
-    }
+  /* 暗いオーバーレイ */
+  body::before {
+    content:"";
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.45);
+    z-index:-1;
+  }
 
-    /* 暗いオーバーレイ */
-    body::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.45);
-      z-index: -1;
-    }
+  h1 {
+    margin-top:40px;
+    font-size:40px;
+    text-shadow:0 2px 4px black;
+  }
 
-    h1 {
-      margin-top: 40px;
-      font-size: 44px;
-      text-shadow: 0 2px 4px black;
-    }
+  .calendar-box {
+    width:90%;
+    max-width:600px;
+    margin:40px auto;
+    background:rgba(255,255,255,0.92);
+    color:#333;
+    border-radius:16px;
+    box-shadow:0 4px 10px rgba(0,0,0,0.5);
+    padding:20px;
+  }
 
-    .menu {
-      margin-top: 40px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 16px;
-      padding: 0 20px;
-    }
+  .title {
+    font-size:28px;
+    font-weight:bold;
+    margin-bottom:10px;
+  }
 
-    /* スマホ向けの大きいボタン */
-    .menu a {
-      width: 100%;
-      padding: 100px 0; /* ←縦の余白を増やして高さ3倍に！ */
-      background-color: rgba(76,175,80,0.9);
-      color: white;
-      text-decoration: none;
-      border-radius: 12px;
-      font-size: 32px;
-      font-weight: bold;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.4);
-      transition: 0.2s;
-    }
+  table {
+    width:100%;
+    border-collapse:collapse;
+    table-layout:fixed;
+    font-size:20px;
+  }
 
-    .menu a:hover {
-      background-color: rgba(69,160,73,1);
-      transform: translateY(-3px);
-    }
+  th, td {
+    padding:10px 0;
+    border:1px solid #ccc;
+  }
 
-  </style>
+  th {
+    background:#333;
+    color:white;
+  }
+
+  .sun { color:red; }
+  .sat { color:blue; }
+
+  /* 戻るボタン */
+  .back {
+    display:block;
+    width:250px;
+    margin:30px auto 0;
+    padding:16px 0;
+    background:rgba(76,175,80,0.95);
+    color:white;
+    border-radius:12px;
+    text-decoration:none;
+    font-size:22px;
+    font-weight:bold;
+    box-shadow:0 3px 8px rgba(0,0,0,0.4);
+    transition:0.2s;
+  }
+
+  .back:hover {
+    background:rgba(69,160,73,1);
+    transform:translateY(-3px);
+  }
+
+</style>
 </head>
 
 <body>
 
-  <h1>筒井大翔公式ホームページ</h1>
+<h1>月間カレンダー</h1>
 
-  <div class="menu">
-    <a href="2ndindex.html">当選契機確認ツール</a>
-    <a href="hanabi.html">作業日報</a>
-    <a href="karendar.html">月間カレンダー</a>
-  </div>
+<div class="calendar-box">
+  <div id="title" class="title"></div>
+  <table id="calendar"></table>
+</div>
+
+<a href="index.html" class="back">ホームに戻る</a>
+
+<script>
+(function() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+
+  document.getElementById("title").textContent = `${year}年 ${month+1}月`;
+
+  const first = new Date(year, month, 1);
+  const last  = new Date(year, month+1, 0);
+
+  const startWeek = first.getDay();
+  const totalDays = last.getDate();
+
+  const table = document.getElementById("calendar");
+
+  let html = "<tr>";
+  const weeks = ["日","月","火","水","木","金","土"];
+
+  weeks.forEach((d,i)=>{
+    if(i===0) html += `<th class="sun">${d}</th>`;
+    else if(i===6) html += `<th class="sat">${d}</th>`;
+    else html += `<th>${d}</th>`;
+  });
+
+  html += "</tr><tr>";
+
+  for(let i=0;i<startWeek;i++) html += "<td></td>";
+
+  for(let d=1; d<=totalDays; d++){
+    const w = (startWeek + d - 1) % 7;
+
+    if(w===0) html += `<td class="sun">${d}</td>`;
+    else if(w===6) html += `<td class="sat">${d}</td>`;
+    else html += `<td>${d}</td>`;
+
+    if(w===6 && d !== totalDays) html += "</tr><tr>";
+  }
+
+  html += "</tr>";
+  table.innerHTML = html;
+})();
+</script>
 
 </body>
 </html>
