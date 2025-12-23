@@ -2,6 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>当選履歴管理</title>
 
 <style>
@@ -28,79 +29,98 @@ body::before {
 }
 
 h1 {
-  margin-top: 30px;
-  font-size: 36px;
-  text-shadow: 0 2px 4px black;
+  font-size: 48px;
+  margin-top: 40px;
+  text-shadow: 0 4px 8px black;
 }
 
+/* ====== コンテナ ====== */
 .container {
   margin-top: 20px;
-  width: 90%;
-  max-width: 900px;
+  width: 95%;
+  max-width: 850px;
   margin-left: auto;
   margin-right: auto;
 }
 
+/* ====== ステータス ====== */
 .status-box {
-  background: rgba(0,0,0,0.6);
-  padding: 15px;
-  border-radius: 12px;
-  margin-bottom: 18px;
-  font-size: 22px;
+  background: rgba(0,0,0,0.65);
+  padding: 18px;
+  border-radius: 18px;
+  margin-bottom: 22px;
+  font-size: 28px;
   line-height: 1.8em;
 }
 
+/* ====== 入力エリア ====== */
 .input-box {
-  background: rgba(0,0,0,0.6);
-  padding: 20px;
-  border-radius: 12px;
+  background: rgba(0,0,0,0.65);
+  padding: 28px;
+  border-radius: 18px;
 }
 
 .input-box input,
 .input-box select,
 .input-box textarea {
   width: 95%;
-  font-size: 20px;
-  padding: 8px;
-  margin-top: 10px;
-  border-radius: 8px;
+  font-size: 28px;
+  padding: 18px;
+  margin-top: 16px;
+  border-radius: 14px;
   border: none;
 }
 
+/* 追加ボタン */
 button {
-  margin-top: 15px;
+  margin-top: 18px;
   width: 95%;
-  padding: 12px;
-  font-size: 22px;
+  padding: 40px 0;
+  font-size: 34px;
   font-weight: bold;
   color: white;
   background: rgba(76,175,80,0.9);
   border: none;
-  border-radius: 10px;
-  box-shadow: 0 3px 6px black;
+  border-radius: 18px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.6);
 }
 button:hover {
   background: rgba(69,160,73,1);
 }
 
+/* ===== 履歴 ===== */
 .record-list {
-  margin-top: 25px;
+  margin-top: 30px;
 }
 
 .record {
-  background: rgba(0,0,0,0.65);
-  margin-top: 12px;
-  padding: 12px;
-  border-radius: 10px;
+  background: rgba(0,0,0,0.7);
+  margin-top: 16px;
+  padding: 20px;
+  border-radius: 16px;
   text-align: left;
-  font-size: 20px;
+  font-size: 28px;
 }
 
 .record button{
   width: auto;
-  font-size: 16px;
-  padding: 6px 12px;
-  margin-right: 6px;
+  font-size: 22px;
+  padding: 10px 20px;
+  margin-right: 10px;
+  border-radius: 12px;
+}
+
+/* ===== スマホでも圧迫しないよう調整 ===== */
+@media (min-width: 900px){
+  h1{ font-size: 40px; }
+  .status-box{ font-size: 22px; }
+  .input-box input,
+  .input-box select,
+  .input-box textarea{
+    font-size: 18px;
+  }
+  button{ font-size: 20px; padding: 16px; }
+  .record{ font-size: 18px; }
 }
 </style>
 </head>
@@ -130,8 +150,10 @@ button:hover {
       <option>異色BIG</option>
     </select>
 
-    <!-- ★ 当選契機（複数対応） -->
-    <div id="triggerArea"></div>
+    <!-- 当選契機 -->
+    <div id="triggerBox"></div>
+
+    <button onclick="addTrigger()">＋ 当選契機を追加</button>
 
     <textarea id="memo" rows="3" placeholder="メモ"></textarea>
 
@@ -146,60 +168,55 @@ button:hover {
 let records = []
 let editIndex = -1
 
-/* ───── 当選契機候補 ───── */
 const triggerOptions = [
   "単独","一枚役A","一枚役B","一枚役C","一枚役D",
-  "共通１枚役","ベル","リプレイ","チェリー","スイカ","特リプ"
+  "共通１枚役","ベル","リプレイ",
+  "チェリー","スイカ","特リプ"
 ]
 
-/* ───── セレクト生成 ───── */
-function createTriggerSelect(value = ""){
+function addTrigger(value=""){
+  const box = document.getElementById("triggerBox")
   const select = document.createElement("select")
-  select.className = "trigger"
-  select.innerHTML = `<option value="">当選契機を選択</option>` +
-    triggerOptions.map(v => `<option ${v===value?"selected":""}>${v}</option>`).join("")
+  select.style.width="95%"
+  select.style.fontSize="26px"
+  select.style.padding="14px"
+  select.style.borderRadius="12px"
+  select.style.marginTop="10px"
 
-  select.onchange = handleTriggerChange
-  return select
+  let html = `<option value="">当選契機を選択</option>`
+  triggerOptions.forEach(t => {
+    html += `<option ${t===value?"selected":""}>${t}</option>`
+  })
+  select.innerHTML = html
+  box.appendChild(select)
 }
 
-/* ───── 値が入ったら次の入力欄を増やす ───── */
-function handleTriggerChange(){
-  const area = document.getElementById("triggerArea")
-  const triggers = [...area.querySelectorAll("select")]
-
-  // 最後のselectが埋まったら新しいselect追加
-  const last = triggers[triggers.length-1]
-  if(last.value !== ""){
-    area.appendChild(createTriggerSelect())
-  }
+function getTriggers(){
+  return [...document.querySelectorAll("#triggerBox select")]
+    .map(s => s.value)
+    .filter(v => v)
 }
 
-/* ───── 画面初期化時：1個だけ生成 ───── */
-window.onload = () => {
-  document.getElementById("triggerArea").appendChild(createTriggerSelect())
+function clearTriggers(){
+  document.getElementById("triggerBox").innerHTML = ""
 }
 
-/* ───── 登録 ───── */
 function addRecord() {
   const spin = document.getElementById("spin").value
   const role = document.getElementById("role").value
   const memo = document.getElementById("memo").value
+  const triggers = getTriggers()
 
-  const triggers = [...document.querySelectorAll(".trigger")]
-    .map(s => s.value)
-    .filter(v => v !== "")
-
-  if (!spin || !role){
+  if (!spin || !role) {
     alert("回転数 と 当選役 は必須です")
     return
   }
 
-  const data = { spin: Number(spin), role, triggers, memo }
+  const data = { spin:Number(spin), role, triggers, memo }
 
   if(editIndex === -1){
     records.push(data)
-  } else {
+  }else{
     records[editIndex] = data
     editIndex = -1
   }
@@ -208,29 +225,24 @@ function addRecord() {
   render()
 }
 
-/* ───── 入力クリア ───── */
-function clearInput() {
+function clearInput(){
   document.getElementById("spin").value = ""
   document.getElementById("role").value = ""
   document.getElementById("memo").value = ""
-
-  const area = document.getElementById("triggerArea")
-  area.innerHTML = ""
-  area.appendChild(createTriggerSelect())
+  clearTriggers()
 }
 
-/* ───── 表示更新 ───── */
-function render() {
+function render(){
   const list = document.getElementById("list")
   list.innerHTML = ""
 
-  records.forEach((r, i) => {
+  records.forEach((r,i)=>{
     const div = document.createElement("div")
     div.className = "record"
     div.innerHTML = `
       <div>回転数：${r.spin}</div>
       <div>当選役：${r.role}</div>
-      <div>当選契機：${r.triggers.length ? r.triggers.join(" , ") : "－"}</div>
+      <div>当選契機：${r.triggers.length ? r.triggers.join(", ") : "－"}</div>
       <div>メモ：${r.memo || "－"}</div>
       <br>
       <button onclick="edit(${i})">編集</button>
@@ -242,22 +254,18 @@ function render() {
   updateStatus()
 }
 
-/* ───── 編集 ───── */
 function edit(i){
   const r = records[i]
   document.getElementById("spin").value = r.spin
   document.getElementById("role").value = r.role
   document.getElementById("memo").value = r.memo
 
-  const area = document.getElementById("triggerArea")
-  area.innerHTML = ""
-  r.triggers.forEach(t => area.appendChild(createTriggerSelect(t)))
-  area.appendChild(createTriggerSelect(""))
+  clearTriggers()
+  r.triggers.forEach(t=>addTrigger(t))
 
   editIndex = i
 }
 
-/* ───── 削除 ───── */
 function del(i){
   if(confirm("削除しますか？")){
     records.splice(i,1)
@@ -265,7 +273,6 @@ function del(i){
   }
 }
 
-/* ───── 統計 ───── */
 function updateStatus(){
   const status = document.getElementById("status")
 
@@ -275,9 +282,10 @@ function updateStatus(){
     return
   }
 
-  const totalGames = records.reduce((sum, r) => sum + Number(r.spin), 0)
-  const bigCount = records.filter(r => r.role.includes("BIG")).length
-  const regCount = records.filter(r => r.role === "REG").length
+  const totalGames = records.reduce((s,r)=>s+r.spin,0)
+
+  const bigCount = records.filter(r=>r.role.includes("BIG")).length
+  const regCount = records.filter(r=>r.role==="REG").length
 
   const bigProb = bigCount ? `1/${Math.round(totalGames / bigCount)}` : "-"
   const regProb = regCount ? `1/${Math.round(totalGames / regCount)}` : "-"
