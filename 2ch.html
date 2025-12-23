@@ -278,23 +278,30 @@ function updateStatus(){
 
   if(records.length === 0){
     status.innerHTML =
-      "合計ゲーム数：0<br>BIG合計：0　／　REG合計：0<br>BIG確率：-　／　REG確率：-"
+      "合計ゲーム数：0<br>" +
+      "BIG合計：0<br>" +
+      "REG合計：0<br>" +
+      "BIG確率：-<br>" +
+      "REG確率：-"
     return
   }
 
   const totalGames = records.reduce((s,r)=>s+r.spin,0)
 
-  const bigCount = records.filter(r=>r.role.includes("BIG")).length
-  const regCount = records.filter(r=>r.role==="REG").length
+  const bigCount = records.filter(r => r.role.includes("BIG")).length
+  const regCount = records.filter(r => r.role === "REG").length
 
   const bigProb = bigCount ? `1/${Math.round(totalGames / bigCount)}` : "-"
   const regProb = regCount ? `1/${Math.round(totalGames / regCount)}` : "-"
 
   status.innerHTML =
     `合計ゲーム数：${totalGames}<br>` +
-    `BIG合計：${bigCount}|REG合計：${regCount}<br>` +
-    `BIG確率：${bigProb}|REG確率：${regProb}`
+    `BIG合計：${bigCount}<br>` +
+    `REG合計：${regCount}<br>` +
+    `BIG確率：${bigProb}<br>` +
+    `REG確率：${regProb}`
 }
+
 </script>
 
 </body>
