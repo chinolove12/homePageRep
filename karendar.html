@@ -2,33 +2,65 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>当月カレンダー</title>
+<title>月間カレンダー</title>
+
 <style>
   body {
-    font-family: sans-serif;
-    background:#f4f4f4;
-    padding:40px;
-  }
-  .calendar {
-    width: 400px;
-    background:#fff;
-    padding:20px;
-    border-radius:12px;
-    box-shadow:0 4px 10px rgba(0,0,0,0.2);
-    margin:auto;
-  }
-  h2 {
+    margin:0;
+    padding:0;
+    font-family:sans-serif;
+    background:url("kame.jpg") no-repeat center center/cover;
+    height:100vh;
+    color:white;
     text-align:center;
-    margin-bottom:20px;
+    position:relative;
   }
+
+  /* 暗いオーバーレイ */
+  body::before {
+    content:"";
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.45);
+    z-index:-1;
+  }
+
+  h1 {
+    margin-top:40px;
+    font-size:40px;
+    text-shadow:0 2px 4px black;
+  }
+
+  .calendar-box {
+    width:90%;
+    max-width:600px;
+    margin:40px auto;
+    background:rgba(255,255,255,0.92);
+    color:#333;
+    border-radius:16px;
+    box-shadow:0 4px 10px rgba(0,0,0,0.5);
+    padding:20px;
+  }
+
+  .title {
+    font-size:28px;
+    font-weight:bold;
+    margin-bottom:10px;
+  }
+
   table {
     width:100%;
     border-collapse:collapse;
     table-layout:fixed;
+    font-size:20px;
   }
+
   th, td {
-    text-align:center;
-    padding:8px 0;
+    padding:10px 0;
+    border:1px solid #ccc;
   }
 
   th {
@@ -36,45 +68,69 @@
     color:white;
   }
 
-  td {
-    border:1px solid #ccc;
-    height:40px;
-  }
-
   .sun { color:red; }
   .sat { color:blue; }
+
+  /* 戻るボタン */
+  .back {
+    display:block;
+    width:250px;
+    margin:30px auto 0;
+    padding:16px 0;
+    background:rgba(76,175,80,0.95);
+    color:white;
+    border-radius:12px;
+    text-decoration:none;
+    font-size:22px;
+    font-weight:bold;
+    box-shadow:0 3px 8px rgba(0,0,0,0.4);
+    transition:0.2s;
+  }
+
+  .back:hover {
+    background:rgba(69,160,73,1);
+    transform:translateY(-3px);
+  }
+
 </style>
 </head>
+
 <body>
 
-<div class="calendar">
-  <h2 id="title"></h2>
+<h1>月間カレンダー</h1>
+
+<div class="calendar-box">
+  <div id="title" class="title"></div>
   <table id="calendar"></table>
 </div>
+
+<a href="index.html" class="back">ホームに戻る</a>
 
 <script>
 (function() {
   const now = new Date();
   const year = now.getFullYear();
-  const month = now.getMonth(); // 0: Jan
+  const month = now.getMonth();
 
   document.getElementById("title").textContent = `${year}年 ${month+1}月`;
 
-  const firstDay = new Date(year, month, 1);
-  const lastDay  = new Date(year, month + 1, 0);
-  const startWeek = firstDay.getDay();
-  const totalDays = lastDay.getDate();
+  const first = new Date(year, month, 1);
+  const last  = new Date(year, month+1, 0);
+
+  const startWeek = first.getDay();
+  const totalDays = last.getDate();
 
   const table = document.getElementById("calendar");
 
   let html = "<tr>";
-  const week = ["日","月","火","水","木","金","土"];
+  const weeks = ["日","月","火","水","木","金","土"];
 
-  week.forEach((d,i)=>{
+  weeks.forEach((d,i)=>{
     if(i===0) html += `<th class="sun">${d}</th>`;
     else if(i===6) html += `<th class="sat">${d}</th>`;
     else html += `<th>${d}</th>`;
   });
+
   html += "</tr><tr>";
 
   for(let i=0;i<startWeek;i++) html += "<td></td>";
