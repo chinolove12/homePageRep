@@ -237,7 +237,8 @@ function updateStatus(){
     return
   }
 
-  const totalGames = Math.max(...records.map(r => r.spin))
+  // ★★★ ここを「最大値」→「合計値」に変更 ★★★
+  const totalGames = records.reduce((sum, r) => sum + Number(r.spin), 0)
 
   const bigCount = records.filter(r =>
     r.role.includes("BIG")
@@ -255,6 +256,7 @@ function updateStatus(){
     `BIG合計：${bigCount}　／　REG合計：${regCount}<br>` +
     `BIG確率：${bigProb}　／　REG確率：${regProb}`
 }
+
 </script>
 
 </body>
