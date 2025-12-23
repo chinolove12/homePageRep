@@ -1,1 +1,98 @@
-aaa
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>当月カレンダー</title>
+<style>
+  body {
+    font-family: sans-serif;
+    background:#f4f4f4;
+    padding:40px;
+  }
+  .calendar {
+    width: 400px;
+    background:#fff;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 4px 10px rgba(0,0,0,0.2);
+    margin:auto;
+  }
+  h2 {
+    text-align:center;
+    margin-bottom:20px;
+  }
+  table {
+    width:100%;
+    border-collapse:collapse;
+    table-layout:fixed;
+  }
+  th, td {
+    text-align:center;
+    padding:8px 0;
+  }
+
+  th {
+    background:#333;
+    color:white;
+  }
+
+  td {
+    border:1px solid #ccc;
+    height:40px;
+  }
+
+  .sun { color:red; }
+  .sat { color:blue; }
+</style>
+</head>
+<body>
+
+<div class="calendar">
+  <h2 id="title"></h2>
+  <table id="calendar"></table>
+</div>
+
+<script>
+(function() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth(); // 0: Jan
+
+  document.getElementById("title").textContent = `${year}年 ${month+1}月`;
+
+  const firstDay = new Date(year, month, 1);
+  const lastDay  = new Date(year, month + 1, 0);
+  const startWeek = firstDay.getDay();
+  const totalDays = lastDay.getDate();
+
+  const table = document.getElementById("calendar");
+
+  let html = "<tr>";
+  const week = ["日","月","火","水","木","金","土"];
+
+  week.forEach((d,i)=>{
+    if(i===0) html += `<th class="sun">${d}</th>`;
+    else if(i===6) html += `<th class="sat">${d}</th>`;
+    else html += `<th>${d}</th>`;
+  });
+  html += "</tr><tr>";
+
+  for(let i=0;i<startWeek;i++) html += "<td></td>";
+
+  for(let d=1; d<=totalDays; d++){
+    const w = (startWeek + d - 1) % 7;
+
+    if(w===0) html += `<td class="sun">${d}</td>`;
+    else if(w===6) html += `<td class="sat">${d}</td>`;
+    else html += `<td>${d}</td>`;
+
+    if(w===6 && d !== totalDays) html += "</tr><tr>";
+  }
+
+  html += "</tr>";
+  table.innerHTML = html;
+})();
+</script>
+
+</body>
+</html>
