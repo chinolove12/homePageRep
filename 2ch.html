@@ -103,9 +103,33 @@ button:hover {
 <div class="container">
 
   <div class="input-box">
+
     <input id="spin" type="number" placeholder="回転数">
-    <input id="role" type="text" placeholder="当選役（BIG / REG 等）">
-    <input id="trigger" type="text" placeholder="当選契機（チェリー 等）">
+
+    <!-- 当選役 -->
+    <select id="role">
+      <option value="">当選役を選択</option>
+      <option>BIG</option>
+      <option>REG</option>
+      <option>AT</option>
+      <option>ART</option>
+      <option>ボーナス</option>
+      <option>その他</option>
+    </select>
+
+    <!-- 当選契機 -->
+    <select id="trigger">
+      <option value="">当選契機を選択</option>
+      <option>単独</option>
+      <option>チェリー</option>
+      <option>スイカ</option>
+      <option>チャンス目</option>
+      <option>レア役</option>
+      <option>天井</option>
+      <option>ゾーン</option>
+      <option>その他</option>
+    </select>
+
     <textarea id="memo" rows="3" placeholder="メモ"></textarea>
 
     <button onclick="addRecord()">登録</button>
