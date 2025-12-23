@@ -34,11 +34,20 @@ h1 {
 }
 
 .container {
-  margin-top: 30px;
+  margin-top: 20px;
   width: 90%;
   max-width: 900px;
   margin-left: auto;
   margin-right: auto;
+}
+
+.status-box {
+  background: rgba(0,0,0,0.6);
+  padding: 15px;
+  border-radius: 12px;
+  margin-bottom: 18px;
+  font-size: 22px;
+  line-height: 1.8em;
 }
 
 .input-box {
@@ -102,6 +111,13 @@ button:hover {
 
 <div class="container">
 
+  <!-- ───────── ここに統計表示 ───────── -->
+  <div class="status-box" id="status">
+    合計ゲーム数：0<br>
+    BIG合計：0　／　REG合計：0<br>
+    BIG確率：-　／　REG確率：-
+  </div>
+
   <div class="input-box">
 
     <input id="spin" type="number" placeholder="回転数">
@@ -109,12 +125,11 @@ button:hover {
     <!-- 当選役 -->
     <select id="role">
       <option value="">当選役を選択</option>
-      <option>BIG</option>
       <option>REG</option>
-      <option>AT</option>
-      <option>ART</option>
-      <option>ボーナス</option>
-      <option>その他</option>
+      <option>赤BIG</option>
+      <option>青BIG</option>
+      <option>黒BIG</option>
+      <option>異色BIG</option>
     </select>
 
     <!-- 当選契機 -->
@@ -154,7 +169,7 @@ function addRecord() {
     return
   }
 
-  const data = { spin, role, trigger, memo }
+  const data = { spin: Number(spin), role, trigger, memo }
 
   if (editIndex === -1) {
     records.push(data)
@@ -192,6 +207,8 @@ function render() {
     `
     list.appendChild(div)
   })
+
+  updateStatus()
 }
 
 function edit(i){
@@ -204,10 +221,39 @@ function edit(i){
 }
 
 function del(i){
-  if(confirm("削除していい？")){
+  if(confirm("削除しますか？")){
     records.splice(i,1)
     render()
   }
+}
+
+/* ===== ここで統計処理 ===== */
+function updateStatus(){
+  const status = document.getElementById("status")
+
+  if(records.length === 0){
+    status.innerHTML =
+      "合計ゲーム数：0<br>BIG合計：0　／　REG合計：0<br>BIG確率：-　／　REG確率：-"
+    return
+  }
+
+  const totalGames = Math.max(...records.map(r => r.spin))
+
+  const bigCount = records.filter(r =>
+    r.role.includes("BIG")
+  ).length
+
+  const regCount = records.filter(r =>
+    r.role === "REG"
+  ).length
+
+  const bigProb = bigCount ? `1/${Math.round(totalGames / bigCount)}` : "-"
+  const regProb = regCount ? `1/${Math.round(totalGames / regCount)}` : "-"
+
+  status.innerHTML =
+    `合計ゲーム数：${totalGames}<br>` +
+    `BIG合計：${bigCount}　／　REG合計：${regCount}<br>` +
+    `BIG確率：${bigProb}　／　REG確率：${regProb}`
 }
 </script>
 
