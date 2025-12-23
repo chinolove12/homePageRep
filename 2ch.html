@@ -2,10 +2,9 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>当選履歴入力</title>
+<title>当選履歴管理</title>
 
 <style>
-/* ===== 背景（公式サイトと同じ雰囲気） ===== */
 body {
   margin: 0;
   padding: 0;
@@ -17,11 +16,13 @@ body {
   position: relative;
 }
 
-/* 暗いオーバーレイ */
 body::before {
   content: "";
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background: rgba(0,0,0,0.45);
   z-index: -1;
 }
@@ -32,154 +33,157 @@ h1 {
   text-shadow: 0 2px 4px black;
 }
 
-/* ===== 入力フォーム ===== */
-.form-box {
+.container {
+  margin-top: 30px;
   width: 90%;
-  max-width: 700px;
-  margin: 20px auto;
-  padding: 20px;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.input-box {
   background: rgba(0,0,0,0.6);
-  border-radius: 14px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.6);
+  padding: 20px;
+  border-radius: 12px;
 }
 
-.form-row {
-  display: flex;
-  flex-direction: column;
-  text-align: left;
-  margin: 10px 0;
-}
-
-label {
-  font-size: 18px;
-  margin-bottom: 4px;
-}
-
-input, select, textarea {
-  padding: 10px;
-  font-size: 18px;
+.input-box input,
+.input-box select,
+.input-box textarea {
+  width: 95%;
+  font-size: 20px;
+  padding: 8px;
+  margin-top: 10px;
   border-radius: 8px;
   border: none;
 }
 
-/* 追加ボタン */
 button {
-  width: 100%;
-  padding: 14px;
-  margin-top: 20px;
+  margin-top: 15px;
+  width: 95%;
+  padding: 12px;
   font-size: 22px;
   font-weight: bold;
-  border-radius: 12px;
-  border: none;
-  background: rgba(76,175,80,0.9);
   color: white;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.6);
+  background: rgba(76,175,80,0.9);
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 3px 6px black;
 }
 button:hover {
   background: rgba(69,160,73,1);
-  transform: translateY(-2px);
 }
 
-/* ===== 履歴一覧 ===== */
-.history {
-  width: 90%;
-  max-width: 800px;
-  margin: 20px auto 60px auto;
+.record-list {
+  margin-top: 25px;
 }
 
 .record {
-  text-align: left;
-  background: rgba(255,255,255,0.9);
-  color: black;
-  padding: 14px;
+  background: rgba(0,0,0,0.65);
+  margin-top: 12px;
+  padding: 12px;
   border-radius: 10px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.5);
-  margin-bottom: 12px;
+  text-align: left;
+  font-size: 20px;
 }
 
-.record strong {
-  font-size: 20px;
+.record button{
+  width: auto;
+  font-size: 16px;
+  padding: 6px 12px;
+  margin-right: 6px;
 }
 </style>
 </head>
 
 <body>
 
-<h1>当選履歴入力</h1>
+<h1>当選履歴</h1>
 
-<div class="form-box">
+<div class="container">
 
-  <div class="form-row">
-    <label>回転数</label>
-    <input id="spin" type="number" placeholder="例: 123">
+  <div class="input-box">
+    <input id="spin" type="number" placeholder="回転数">
+    <input id="role" type="text" placeholder="当選役（BIG / REG 等）">
+    <input id="trigger" type="text" placeholder="当選契機（チェリー 等）">
+    <textarea id="memo" rows="3" placeholder="メモ"></textarea>
+
+    <button onclick="addRecord()">登録</button>
   </div>
 
-  <div class="form-row">
-    <label>当選役</label>
-    <select id="bonus">
-      <option value="">選択してください</option>
-      <option>BIG</option>
-      <option>REG</option>
-      <option>AT</option>
-      <option>RB</option>
-      <option>その他</option>
-    </select>
-  </div>
+  <div class="record-list" id="list"></div>
 
-  <div class="form-row">
-    <label>当選契機</label>
-    <select id="trigger">
-      <option value="">選択してください</option>
-      <option>チェリー</option>
-      <option>スイカ</option>
-      <option>チャンス目</option>
-      <option>単独</option>
-      <option>リーチ目</option>
-      <option>その他</option>
-    </select>
-  </div>
-
-  <div class="form-row">
-    <label>メモ</label>
-    <textarea id="memo" rows="3" placeholder="自由にメモを書けます"></textarea>
-  </div>
-
-  <button onclick="addRecord()">追加する</button>
 </div>
 
-<h2>当選履歴</h2>
-<div class="history" id="history"></div>
-
 <script>
-// ===== レコード追加処理 =====
-function addRecord() {
-  const spin = document.getElementById("spin").value;
-  const bonus = document.getElementById("bonus").value;
-  const trigger = document.getElementById("trigger").value;
-  const memo = document.getElementById("memo").value;
+let records = []
+let editIndex = -1
 
-  if(!spin || !bonus || !trigger){
-    alert("回転数・当選役・当選契機は必須です！");
-    return;
+function addRecord() {
+  const spin = document.getElementById("spin").value
+  const role = document.getElementById("role").value
+  const trigger = document.getElementById("trigger").value
+  const memo = document.getElementById("memo").value
+
+  if (!spin || !role) {
+    alert("回転数 と 当選役 は必須です")
+    return
   }
 
-  const history = document.getElementById("history");
+  const data = { spin, role, trigger, memo }
 
-  const div = document.createElement("div");
-  div.className = "record";
+  if (editIndex === -1) {
+    records.push(data)
+  } else {
+    records[editIndex] = data
+    editIndex = -1
+  }
 
-  div.innerHTML = `
-    <strong>${spin}G</strong><br>
-    🎰 当選役：${bonus}<br>
-    🎯 契機：${trigger}<br>
-    📝 メモ：${memo || "（なし）"}
-  `;
+  clearInput()
+  render()
+}
 
-  history.prepend(div); // 上に積んでいく
-  document.getElementById("spin").value = "";
-  document.getElementById("bonus").value = "";
-  document.getElementById("trigger").value = "";
-  document.getElementById("memo").value = "";
+function clearInput() {
+  document.getElementById("spin").value = ""
+  document.getElementById("role").value = ""
+  document.getElementById("trigger").value = ""
+  document.getElementById("memo").value = ""
+}
+
+function render() {
+  const list = document.getElementById("list")
+  list.innerHTML = ""
+
+  records.forEach((r, i) => {
+    const div = document.createElement("div")
+    div.className = "record"
+    div.innerHTML = `
+      <div>回転数：${r.spin}</div>
+      <div>当選役：${r.role}</div>
+      <div>当選契機：${r.trigger || "－"}</div>
+      <div>メモ：${r.memo || "－"}</div>
+      <br>
+      <button onclick="edit(${i})">編集</button>
+      <button onclick="del(${i})">削除</button>
+    `
+    list.appendChild(div)
+  })
+}
+
+function edit(i){
+  const r = records[i]
+  document.getElementById("spin").value = r.spin
+  document.getElementById("role").value = r.role
+  document.getElementById("trigger").value = r.trigger
+  document.getElementById("memo").value = r.memo
+  editIndex = i
+}
+
+function del(i){
+  if(confirm("削除していい？")){
+    records.splice(i,1)
+    render()
+  }
 }
 </script>
 
