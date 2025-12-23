@@ -110,6 +110,36 @@ button:hover {
   border-radius: 12px;
 }
 
+/* ===== ▼ 当選役ごとの色 ===== */
+.record.red {
+  background: rgba(255, 0, 0, 0.65);
+  color: #fff;
+}
+
+.record.blue {
+  background: rgba(0, 100, 255, 0.7);
+  color: #fff;
+}
+
+.record.black {
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+}
+
+.record.gray {
+  background: rgba(120,120,120,0.8);
+  color: #fff;
+}
+
+.record.mixed {
+  background: linear-gradient(
+    135deg,
+    rgba(255,0,0,0.75),
+    rgba(0,100,255,0.8)
+  );
+  color: #fff;
+}
+
 /* ===== スマホでも圧迫しないよう調整 ===== */
 @media (min-width: 900px){
   h1{ font-size: 40px; }
@@ -133,8 +163,10 @@ button:hover {
 
   <div class="status-box" id="status">
     合計ゲーム数：0<br>
-    BIG合計：0 | REG合計：0<br>
-    BIG確率：- | REG確率：-
+    BIG合計：0<br>
+    REG合計：0<br>
+    BIG確率：-<br>
+    REG確率：-
   </div>
 
   <div class="input-box">
@@ -150,7 +182,6 @@ button:hover {
       <option>異色BIG</option>
     </select>
 
-    <!-- 当選契機 -->
     <div id="triggerBox"></div>
 
     <button onclick="addTrigger()">＋ 当選契機を追加</button>
@@ -201,6 +232,18 @@ function clearTriggers(){
   document.getElementById("triggerBox").innerHTML = ""
 }
 
+/* ===== ▼ 当選役 → 色クラス ===== */
+function getColorClass(role){
+  switch(role){
+    case "赤BIG": return "red"
+    case "青BIG": return "blue"
+    case "黒BIG": return "black"
+    case "REG": return "gray"
+    case "異色BIG": return "mixed"
+    default: return ""
+  }
+}
+
 function addRecord() {
   const spin = document.getElementById("spin").value
   const role = document.getElementById("role").value
@@ -238,7 +281,8 @@ function render(){
 
   records.forEach((r,i)=>{
     const div = document.createElement("div")
-    div.className = "record"
+    div.className = "record " + getColorClass(r.role)
+
     div.innerHTML = `
       <div>回転数：${r.spin}</div>
       <div>当選役：${r.role}</div>
