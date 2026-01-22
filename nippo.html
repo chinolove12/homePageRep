@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>作業日報入力</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+      background: url("kame.jpg") no-repeat center center/cover;
+      height: 100vh;
+      color: white;
+      text-align: center;
+      position: relative;
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.45);
+      z-index: -1;
+    }
+
+    h1 {
+      font-size: 72px;
+      margin-top: 80px;
+      text-shadow: 0 4px 8px black;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 40px;
+      margin-top: 80px;
+      padding: 0 20px;
+    }
+
+    select,
+    input[type="number"],
+    input[type="date"],
+    textarea {
+      width: 90%;
+      max-width: 600px;
+      padding: 32px;
+      font-size: 36px;
+      border-radius: 20px;
+      border: none;
+    }
+
+    select {
+      text-align: center;
+    }
+
+    textarea {
+      height: 200px;
+      resize: none;
+    }
+
+    button {
+      width: 90%;
+      max-width: 600px;
+      padding: 80px 0;
+      font-size: 48px;
+      font-weight: bold;
+      background-color: rgba(76,175,80,0.9);
+      color: white;
+      border: none;
+      border-radius: 24px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background-color: rgba(69,160,73,1);
+      transform: translateY(-2px);
+    }
+
+    .back-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 50%;
+      max-width: 400px;
+      padding: 40px 0;
+      font-size: 36px;
+      font-weight: bold;
+      text-align: center;
+      background-color: rgba(76,175,80,0.9);
+      color: white;
+      text-decoration: none;
+      border-radius: 24px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+      transition: 0.2s;
+      z-index: 100;
+    }
+
+    .back-btn:hover {
+      background-color: rgba(69,160,73,1);
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body>
+
+  <h1>作業日報入力</h1>
+
+  <form id="hanabiForm">
+    <!-- 機種名（リスト） -->
+    <select name="machine" required>
+      <option value="">機種名を選択</option>
+      <option value="ハナビ">ハナビ</option>
+      <option value="バーサス">バーサス</option>
+      <option value="ディスクアップ">ディスクアップ</option>
+      <option value="マイジャグラー">マイジャグラー</option>
+      <option value="ファンキージャグラー">ファンキージャグラー</option>
+    </select>
+
+    <!-- 差枚 -->
+    <input type="number" name="difference" placeholder="差枚" required>
+
+    <!-- メモ -->
+    <textarea name="memo" placeholder="メモ（自由入力）"></textarea>
+
+    <!-- 年月日 -->
+    <input type="date" name="date" required>
+
+    <button type="submit">送信</button>
+
+    <a href="index.html" class="back-btn">戻る</a>
+  </form>
+
+  <script>
+    const form = document.getElementById('hanabiForm');
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+      const data = {
+        machine: formData.get('machine'),
+        difference: formData.get('difference'),
+        memo: formData.get('memo'),
+        date: formData.get('date')
+      };
+
+      fetch('https://script.google.com/macros/s/AKfycbwOMLyKToLwXzMCnl3LDphMp7FESB_bg-9aFkferoqV2D94BHVZRuxbNXkmXrGc1xgQ/exec', {
+        method: 'POST',
+        body: JSON.stringify(data)
+      })
+      .then(res => res.json())
+      .then(res => alert(res.message))
+      .catch(err => alert('送信失敗: ' + err));
+    });
+  </script>
+
+</body>
+</html>
