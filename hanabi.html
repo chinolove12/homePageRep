@@ -137,7 +137,7 @@
     .then(res => alert(res.message))
     .catch(err => alert('送信失敗: ' + err));
 
-    data = {
+   const data2 = {
         machine: "ディスクアップ２",
         difference: formData.get('difference'),
         memo: "",
@@ -146,7 +146,7 @@
 
       fetch('https://script.google.com/macros/s/AKfycbytHj6AGSjf4IokvfYNLTs4Qbl5sUgeQDqZagJehGmcEts5Aj_PT1XGQ1ff8VGNRONW/exec', {
         method: 'POST',
-        body: JSON.stringify(data)
+        body: JSON.stringify(data2)
       })
       .then(res => res.json())
       .then(res => alert(res.message))
