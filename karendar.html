@@ -4,93 +4,65 @@
 <meta charset="UTF-8">
 <title>月間カレンダー</title>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <style>
-  body {
-    margin:0;
-    padding:0;
-    font-family:sans-serif;
-    background:url("kame.jpg") no-repeat center center/cover;
-    height:100vh;
-    color:white;
-    text-align:center;
-    position:relative;
-  }
 
-  /* 暗いオーバーレイ */
-  body::before {
-    content:"";
-    position:absolute;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:rgba(0,0,0,0.45);
-    z-index:-1;
-  }
+body{
+margin:0;
+padding:0;
+font-family:sans-serif;
+background:url("kame.jpg") no-repeat center center/cover;
+height:100vh;
+color:white;
+text-align:center;
+}
 
-  h1 {
-    margin-top:40px;
-    font-size:40px;
-    text-shadow:0 2px 4px black;
-  }
+h1{
+margin-top:40px;
+font-size:40px;
+text-shadow:0 2px 4px black;
+}
 
-  .calendar-box {
-    width:90%;
-    max-width:600px;
-    margin:40px auto;
-    background:rgba(255,255,255,0.92);
-    color:#333;
-    border-radius:16px;
-    box-shadow:0 4px 10px rgba(0,0,0,0.5);
-    padding:20px;
-  }
+.calendar-box{
+width:90%;
+max-width:700px;
+margin:40px auto;
+background:rgba(255,255,255,0.92);
+color:#333;
+border-radius:16px;
+padding:20px;
+}
 
-  .title {
-    font-size:28px;
-    font-weight:bold;
-    margin-bottom:10px;
-  }
+table{
+width:100%;
+border-collapse:collapse;
+table-layout:fixed;
+}
 
-  table {
-    width:100%;
-    border-collapse:collapse;
-    table-layout:fixed;
-    font-size:20px;
-  }
+th,td{
+border:1px solid #ccc;
+padding:6px;
+height:70px;
+vertical-align:top;
+}
 
-  th, td {
-    padding:10px 0;
-    border:1px solid #ccc;
-  }
+.sun{color:red;}
+.sat{color:blue;}
 
-  th {
-    background:#333;
-    color:white;
-  }
+.profit{
+font-size:12px;
+margin-top:4px;
+}
 
-  .sun { color:red; }
-  .sat { color:blue; }
+.plus{color:red;}
+.minus{color:blue;}
 
-  /* 戻るボタン */
-  .back {
-    display:block;
-    width:250px;
-    margin:30px auto 0;
-    padding:16px 0;
-    background:rgba(76,175,80,0.95);
-    color:white;
-    border-radius:12px;
-    text-decoration:none;
-    font-size:22px;
-    font-weight:bold;
-    box-shadow:0 3px 8px rgba(0,0,0,0.4);
-    transition:0.2s;
-  }
-
-  .back:hover {
-    background:rgba(69,160,73,1);
-    transform:translateY(-3px);
-  }
+canvas{
+background:white;
+border-radius:12px;
+margin-top:40px;
+}
 
 </style>
 </head>
@@ -100,54 +72,131 @@
 <h1>月間カレンダー</h1>
 
 <div class="calendar-box">
-  <div id="title" class="title"></div>
-  <table id="calendar"></table>
+<div id="title"></div>
+<table id="calendar"></table>
+
+<canvas id="chart" height="200"></canvas>
+
 </div>
 
-<a href="index.html" class="back">ホームに戻る</a>
-
 <script>
-(function() {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = now.getMonth();
 
-  document.getElementById("title").textContent = `${year}年 ${month+1}月`;
+const API="GASのURL";
 
-  const first = new Date(year, month, 1);
-  const last  = new Date(year, month+1, 0);
+let monthlyData={};
 
-  const startWeek = first.getDay();
-  const totalDays = last.getDate();
+fetch(API)
+.then(r=>r.json())
+.then(data=>{
 
-  const table = document.getElementById("calendar");
+data.forEach(d=>{
+monthlyData[d.date]=d.diff;
+});
 
-  let html = "<tr>";
-  const weeks = ["日","月","火","水","木","金","土"];
+drawCalendar();
+drawGraph();
 
-  weeks.forEach((d,i)=>{
-    if(i===0) html += `<th class="sun">${d}</th>`;
-    else if(i===6) html += `<th class="sat">${d}</th>`;
-    else html += `<th>${d}</th>`;
-  });
+});
 
-  html += "</tr><tr>";
 
-  for(let i=0;i<startWeek;i++) html += "<td></td>";
+function drawCalendar(){
 
-  for(let d=1; d<=totalDays; d++){
-    const w = (startWeek + d - 1) % 7;
+const now=new Date();
+const year=now.getFullYear();
+const month=now.getMonth();
 
-    if(w===0) html += `<td class="sun">${d}</td>`;
-    else if(w===6) html += `<td class="sat">${d}</td>`;
-    else html += `<td>${d}</td>`;
+document.getElementById("title").textContent=`${year}年 ${month+1}月`;
 
-    if(w===6 && d !== totalDays) html += "</tr><tr>";
-  }
+const first=new Date(year,month,1);
+const last=new Date(year,month+1,0);
 
-  html += "</tr>";
-  table.innerHTML = html;
-})();
+const startWeek=first.getDay();
+const totalDays=last.getDate();
+
+const table=document.getElementById("calendar");
+
+let html="<tr>";
+const weeks=["日","月","火","水","木","金","土"];
+
+weeks.forEach((d,i)=>{
+
+if(i===0) html+=`<th class="sun">${d}</th>`;
+else if(i===6) html+=`<th class="sat">${d}</th>`;
+else html+=`<th>${d}</th>`;
+
+});
+
+html+="</tr><tr>";
+
+for(let i=0;i<startWeek;i++) html+="<td></td>";
+
+for(let d=1; d<=totalDays; d++){
+
+const dateStr=`${year}-${String(month+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+const diff=monthlyData[dateStr];
+
+let profitHTML="";
+
+if(diff!==undefined){
+
+const cls=diff>=0?"plus":"minus";
+const sign=diff>0?"+":"";
+
+profitHTML=`<div class="profit ${cls}">${sign}${diff}</div>`;
+
+}
+
+const w=(startWeek+d-1)%7;
+
+let cls="";
+if(w===0) cls="sun";
+if(w===6) cls="sat";
+
+html+=`<td class="${cls}">${d}${profitHTML}</td>`;
+
+if(w===6 && d!==totalDays) html+="</tr><tr>";
+
+}
+
+html+="</tr>";
+table.innerHTML=html;
+
+}
+
+
+function drawGraph(){
+
+const now=new Date();
+const year=now.getFullYear();
+const month=now.getMonth()+1;
+
+const labels=[];
+const values=[];
+
+Object.keys(monthlyData).forEach(d=>{
+
+if(d.startsWith(`${year}-${String(month).padStart(2,"0")}`)){
+
+labels.push(d.slice(8));
+values.push(monthlyData[d]);
+
+}
+
+});
+
+new Chart(document.getElementById("chart"),{
+type:"bar",
+data:{
+labels:labels,
+datasets:[{
+label:"差枚",
+data:values
+}]
+}
+});
+
+}
+
 </script>
 
 </body>
