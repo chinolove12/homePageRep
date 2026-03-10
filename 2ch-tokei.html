@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+<meta charset="UTF-8">
+<title>ボーナス契機統計</title>
+
+<style>
+
+body{
+font-family:sans-serif;
+background:#f0f0f0;
+padding:40px;
+}
+
+h1{
+text-align:center;
+}
+
+table{
+margin:auto;
+border-collapse:collapse;
+background:white;
+}
+
+th,td{
+border:1px solid #ccc;
+padding:10px 16px;
+text-align:center;
+font-size:16px;
+}
+
+th{
+background:#333;
+color:white;
+}
+
+tr:nth-child(even){
+background:#f7f7f7;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>契機別ボーナス確率（実践値）</h1>
+
+<table id="matrix"></table>
+
+<script>
+
+const API = "https://script.google.com/macros/s/AKfycbypgrprmoFKKr7cCxYn51NhEg9C5D-kwEhQhzBDrwtL5vFxc_gqWB1DnohvYssJUHA/exec"
+
+const flags = [
+"単独",
+"一枚役A",
+"一枚役B",
+"一枚役C",
+"一枚役D",
+"共通１枚役",
+"ベル",
+"リプレイ",
+"チェリー",
+"スイカ",
+"特リプ"
+]
+
+const bonus = [
+"REG",
+"赤BIG",
+"青BIG",
+"黒BIG"
+]
+
+
+fetch(API)
+.then(r=>r.json())
+.then(data=>{
+
+const table = document.getElementById("matrix")
+
+let html = "<tr>"
+html += "<th>フラグ</th>"
+
+bonus.forEach(b=>{
+html += "<th>"+b+"</th>"
+})
+
+html += "</tr>"
+
+
+flags.forEach(f=>{
+
+html += "<tr>"
+html += "<td>"+f+"</td>"
+
+bonus.forEach(b=>{
+
+const c = data.count[f][b]
+
+if(c==0){
+
+html += "<td>-</td>"
+
+}else{
+
+const prob = Math.round(data.spin / c)
+
+html += "<td>1/"+prob+"</td>"
+
+}
+
+})
+
+html += "</tr>"
+
+})
+
+
+table.innerHTML = html
+
+})
+
+</script>
+
+</body>
+
+</html>
