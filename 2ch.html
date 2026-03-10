@@ -3,53 +3,134 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>当選履歴</title>
+<title>当選履歴管理</title>
 
 <style>
-
-body{
-margin:0;
-font-family:sans-serif;
-background:#222;
-color:white;
-text-align:center;
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  background: url("kame.jpg") no-repeat center center/cover;
+  height: 100vh;
+  color: white;
+  text-align: center;
+  position: relative;
 }
 
-.container{
-width:90%;
-max-width:800px;
-margin:auto;
-margin-top:30px;
+body::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.45);
+  z-index: -1;
 }
 
-.input-box{
-background:#333;
-padding:20px;
-border-radius:10px;
+h1 {
+  font-size: 48px;
+  margin-top: 40px;
+  text-shadow: 0 4px 8px black;
 }
 
-input,select,textarea{
-width:90%;
-font-size:20px;
-margin-top:10px;
-padding:10px;
+.container {
+  margin-top: 20px;
+  width: 95%;
+  max-width: 850px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-button{
-width:90%;
-margin-top:15px;
-padding:15px;
-font-size:22px;
+.status-box {
+  background: rgba(0,0,0,0.65);
+  padding: 18px;
+  border-radius: 18px;
+  margin-bottom: 22px;
+  font-size: 28px;
+  line-height: 1.8em;
 }
 
-.record{
-background:#444;
-margin-top:10px;
-padding:15px;
-border-radius:10px;
-text-align:left;
+.input-box {
+  background: rgba(0,0,0,0.65);
+  padding: 28px;
+  border-radius: 18px;
 }
 
+.input-box input,
+.input-box select,
+.input-box textarea {
+  width: 95%;
+  font-size: 28px;
+  padding: 18px;
+  margin-top: 16px;
+  border-radius: 14px;
+  border: none;
+}
+
+button {
+  margin-top: 18px;
+  width: 95%;
+  padding: 40px 0;
+  font-size: 34px;
+  font-weight: bold;
+  color: white;
+  background: rgba(76,175,80,0.9);
+  border: none;
+  border-radius: 18px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+}
+
+button:hover {
+  background: rgba(69,160,73,1);
+}
+
+.record-list {
+  margin-top: 30px;
+}
+
+.record {
+  background: rgba(0,0,0,0.7);
+  margin-top: 16px;
+  padding: 20px;
+  border-radius: 16px;
+  text-align: left;
+  font-size: 28px;
+}
+
+.record.red {
+  background: rgba(255, 0, 0, 0.65);
+}
+
+.record.blue {
+  background: rgba(0, 100, 255, 0.7);
+}
+
+.record.black {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.record.gray {
+  background: rgba(120,120,120,0.8);
+}
+
+.record.mixed {
+  background: linear-gradient(
+    135deg,
+    rgba(255,0,0,0.75),
+    rgba(0,100,255,0.8)
+  );
+}
+
+@media (min-width: 900px){
+  h1{ font-size: 40px; }
+  .status-box{ font-size: 22px; }
+  .input-box input,
+  .input-box select,
+  .input-box textarea{ font-size: 18px; }
+  button{ font-size: 20px; padding: 16px; }
+  .record{ font-size: 18px; }
+}
 </style>
 </head>
 
@@ -59,12 +140,20 @@ text-align:left;
 
 <div class="container">
 
+<div class="status-box" id="status">
+合計ゲーム数：0<br>
+BIG合計：0<br>
+REG合計：0<br>
+BIG確率：-<br>
+REG確率：-
+</div>
+
 <div class="input-box">
 
 <input id="spin" type="number" placeholder="回転数">
 
 <select id="role">
-<option value="">当選役</option>
+<option value="">当選役を選択</option>
 <option>REG</option>
 <option>赤BIG</option>
 <option>青BIG</option>
@@ -72,82 +161,53 @@ text-align:left;
 <option>異色BIG</option>
 </select>
 
-<div id="triggerBox"></div>
+<select id="trigger">
+<option value="">当選契機を選択</option>
+<option>単独</option>
+<option>一枚役A</option>
+<option>一枚役B</option>
+<option>一枚役C</option>
+<option>一枚役D</option>
+<option>共通１枚役</option>
+<option>ベル</option>
+<option>リプレイ</option>
+<option>チェリー</option>
+<option>スイカ</option>
+<option>特リプ</option>
+</select>
 
-<button onclick="addTrigger()">契機追加</button>
-
-<textarea id="memo" placeholder="メモ"></textarea>
+<textarea id="memo" rows="3" placeholder="メモ"></textarea>
 
 <button onclick="addRecord()">登録</button>
 
 </div>
 
-<div id="list"></div>
+<div class="record-list" id="list"></div>
 
 </div>
 
 <script>
 
-const API_URL = "https://script.google.com/macros/s/AKfycbwmM0PpGJzm5406tNTh2SV9VK6aRUlHJRXsnDQWz1clGA1-3JkGPEhH0Q5Po0W-FLz1/exec"
+const API_URL="https://script.google.com/macros/s/AKfycbwmM0PpGJzm5406tNTh2SV9VK6aRUlHJRXsnDQWz1clGA1-3JkGPEhH0Q5Po0W-FLz1/exec"
 
 let records=[]
-
-const triggerOptions=[
-"単独","一枚役A","一枚役B","一枚役C","一枚役D",
-"共通１枚役","ベル","リプレイ",
-"チェリー","スイカ","特リプ"
-]
-
-function addTrigger(value=""){
-
-const box=document.getElementById("triggerBox")
-
-const select=document.createElement("select")
-
-let html=`<option value="">契機</option>`
-
-triggerOptions.forEach(t=>{
-html+=`<option ${t===value?"selected":""}>${t}</option>`
-})
-
-select.innerHTML=html
-box.appendChild(select)
-
-}
-
-function getTriggers(){
-
-return [...document.querySelectorAll("#triggerBox select")]
-.map(s=>s.value)
-.filter(v=>v)
-
-}
-
-function clearInput(){
-
-document.getElementById("spin").value=""
-document.getElementById("role").value=""
-document.getElementById("memo").value=""
-document.getElementById("triggerBox").innerHTML=""
-
-}
 
 function addRecord(){
 
 const spin=document.getElementById("spin").value
 const role=document.getElementById("role").value
+const trigger=document.getElementById("trigger").value
 const memo=document.getElementById("memo").value
-const triggers=getTriggers()
 
 if(!spin||!role){
-alert("回転数と役は必須")
+alert("回転数 と 当選役 は必須です")
 return
 }
 
 const data={
 spin:Number(spin),
 role:role,
-triggers:triggers,
+trigger:trigger,
 memo:memo
 }
 
@@ -156,11 +216,18 @@ method:"POST",
 body:JSON.stringify(data)
 })
 .then(()=>{
-
 clearInput()
 loadRecords()
-
 })
+
+}
+
+function clearInput(){
+
+document.getElementById("spin").value=""
+document.getElementById("role").value=""
+document.getElementById("trigger").value=""
+document.getElementById("memo").value=""
 
 }
 
@@ -173,13 +240,26 @@ fetch(API_URL)
 records=data.map(r=>({
 spin:r[1],
 role:r[2],
-triggers:r[3]?r[3].split(","):[],
+trigger:r[3],
 memo:r[4]
 }))
 
 render()
 
 })
+
+}
+
+function getColorClass(role){
+
+switch(role){
+case "赤BIG": return "red"
+case "青BIG": return "blue"
+case "黒BIG": return "black"
+case "REG": return "gray"
+case "異色BIG": return "mixed"
+default: return ""
+}
 
 }
 
@@ -191,20 +271,39 @@ list.innerHTML=""
 records.forEach(r=>{
 
 const div=document.createElement("div")
-div.className="record"
+div.className="record "+getColorClass(r.role)
 
 div.innerHTML=`
-
-回転数：${r.spin}<br>
-当選役：${r.role}<br>
-契機：${r.triggers.join(",")}<br>
-メモ：${r.memo}
-
+<div>回転数：${r.spin}</div>
+<div>当選役：${r.role}</div>
+<div>当選契機：${r.trigger || "－"}</div>
+<div>メモ：${r.memo || "－"}</div>
 `
 
 list.appendChild(div)
 
 })
+
+updateStatus()
+
+}
+
+function updateStatus(){
+
+const totalGames=records.reduce((s,r)=>s+Number(r.spin),0)
+
+const bigCount=records.filter(r=>r.role.includes("BIG")).length
+const regCount=records.filter(r=>r.role==="REG").length
+
+const bigProb=bigCount?`1/${Math.round(totalGames/bigCount)}`:"-"
+const regProb=regCount?`1/${Math.round(totalGames/regCount)}`:"-"
+
+document.getElementById("status").innerHTML=
+`合計ゲーム数：${totalGames}<br>
+BIG合計：${bigCount}<br>
+REG合計：${regCount}<br>
+BIG確率：${bigProb}<br>
+REG確率：${regProb}`
 
 }
 
