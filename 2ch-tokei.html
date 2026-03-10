@@ -22,6 +22,7 @@ table{
 margin:auto;
 border-collapse:collapse;
 background:white;
+margin-bottom:40px;
 }
 
 th,td{
@@ -40,11 +41,20 @@ tr:nth-child(even){
 background:#f7f7f7;
 }
 
+.theory{
+font-size:12px;
+color:#777;
+}
+
 </style>
 
 </head>
 
 <body>
+
+<h1>理論値設定</h1>
+
+<table id="theoryTable"></table>
 
 <h1>契機別ボーナス確率（実践値）</h1>
 
@@ -54,7 +64,7 @@ background:#f7f7f7;
 
 const API="https://script.google.com/macros/s/AKfycbypgrprmoFKKr7cCxYn51NhEg9C5D-kwEhQhzBDrwtL5vFxc_gqWB1DnohvYssJUHA/exec?mode=matrix"
 
-const flags = [
+const flags=[
 "単独",
 "一枚役A",
 "一枚役B",
@@ -68,7 +78,7 @@ const flags = [
 "特リプ"
 ]
 
-const bonus = [
+const bonus=[
 "REG",
 "赤BIG",
 "青BIG",
@@ -76,83 +86,220 @@ const bonus = [
 "異色"
 ]
 
+
+/* ===== 理論値入力 ===== */
+
+const theory = {
+
+"単独":{
+"REG":"1/16384",
+"赤BIG":"",
+"青BIG":"1/4096",
+"黒BIG":"1/8192",
+"異色":""
+},
+
+"一枚役A":{
+"REG":"",
+"赤BIG":"1/2048",
+"青BIG":"",
+"黒BIG":"1/4096",
+"異色":""
+},
+
+"一枚役B":{
+"REG":"",
+"赤BIG":"",
+"青BIG":"",
+"黒BIG":"",
+"異色":""
+},
+
+"一枚役C":{
+"REG":"",
+"赤BIG":"",
+"青BIG":"",
+"黒BIG":"",
+"異色":""
+},
+
+"一枚役D":{
+"REG":"",
+"赤BIG":"",
+"青BIG":"1/4096",
+"黒BIG":"1/4096",
+"異色":""
+},
+
+"共通１枚役":{
+"REG":"",
+"赤BIG":"",
+"青BIG":"",
+"黒BIG":"",
+"異色":""
+},
+
+"ベル":{
+"REG":"",
+"赤BIG":"",
+"青BIG":"",
+"黒BIG":"",
+"異色":""
+},
+
+"リプレイ":{
+"REG":"",
+"赤BIG":"",
+"青BIG":"",
+"黒BIG":"",
+"異色":""
+},
+
+"チェリー":{
+"REG":"",
+"赤BIG":"",
+"青BIG":"",
+"黒BIG":"",
+"異色":""
+},
+
+"スイカ":{
+"REG":"",
+"赤BIG":"",
+"青BIG":"",
+"黒BIG":"",
+"異色":""
+},
+
+"特リプ":{
+"REG":"",
+"赤BIG":"",
+"青BIG":"",
+"黒BIG":"",
+"異色":""
+}
+
+}
+
+
+/* ===== 理論値テーブル作成 ===== */
+
+function drawTheoryTable(){
+
+const table=document.getElementById("theoryTable")
+
+let html="<tr><th>フラグ</th>"
+
+bonus.forEach(b=>{
+html+="<th>"+b+"</th>"
+})
+
+html+="</tr>"
+
+flags.forEach(f=>{
+
+html+="<tr>"
+html+="<td>"+f+"</td>"
+
+bonus.forEach(b=>{
+
+html+=`<td>
+<input 
+style="width:80px"
+placeholder="1/xxx"
+oninput="theory['${f}']['${b}']=this.value">
+</td>`
+
+})
+
+html+="</tr>"
+
+})
+
+table.innerHTML=html
+
+}
+
+drawTheoryTable()
+
+
+/* ===== 実践値取得 ===== */
+
 fetch(API)
 .then(r=>r.json())
 .then(data=>{
 
-const table = document.getElementById("matrix")
+const table=document.getElementById("matrix")
 
-let html = "<tr>"
-html += "<th>フラグ</th>"
+let html="<tr><th>フラグ</th>"
 
 bonus.forEach(b=>{
-html += "<th>"+b+"</th>"
+html+="<th>"+b+"</th>"
 })
 
-html += "</tr>"
+html+="</tr>"
 
 
-/* ===== グループ定義 ===== */
+/* グループ */
 
-const blueGroup =
-data.count["単独"]["青BIG"] +
+const blueGroup=
+data.count["単独"]["青BIG"]+
 data.count["一枚役D"]["青BIG"]
 
-const blackGroup =
-data.count["単独"]["黒BIG"] +
-data.count["一枚役A"]["黒BIG"] +
-data.count["一枚役B"]["黒BIG"] +
+const blackGroup=
+data.count["単独"]["黒BIG"]+
+data.count["一枚役A"]["黒BIG"]+
+data.count["一枚役B"]["黒BIG"]+
 data.count["一枚役D"]["黒BIG"]
 
-/* ===== 表作成 ===== */
 
 flags.forEach(f=>{
 
-html += "<tr>"
-html += "<td>"+f+"</td>"
+html+="<tr>"
+html+="<td>"+f+"</td>"
 
 bonus.forEach(b=>{
 
-let c = data.count?.[f]?.[b] ?? 0
+let c=data.count?.[f]?.[b]??0
 
 
-/* 青BIGグループ */
-if(b==="青BIG" && (f==="単独" || f==="一枚役D")){
-c = blueGroup
+if(b==="青BIG"&&(f==="単独"||f==="一枚役D")){
+c=blueGroup
 }
 
-/* 黒BIGグループ */
 if(
-b==="黒BIG" &&
+b==="黒BIG"&&
 (
-f==="単独" ||
-f==="一枚役A" ||
-f==="一枚役B" ||
+f==="単独"||
+f==="一枚役A"||
+f==="一枚役B"||
 f==="一枚役D"
 )
 ){
-c = blackGroup
+c=blackGroup
 }
 
+let actual="-"
 
-if(c===0){
-
-html += "<td>-</td>"
-
-}else{
-
-const prob = Math.round(data.spin / c)
-html += "<td>1/"+prob+"</td>"
-
+if(c!==0){
+const prob=Math.round(data.spin/c)
+actual="1/"+prob
 }
+
+const t=theory[f][b]||""
+
+html+=`<td>
+<div>${actual}</div>
+<div class="theory">(${t})</div>
+</td>`
 
 })
 
-html += "</tr>"
+html+="</tr>"
 
 })
 
-table.innerHTML = html
+table.innerHTML=html
 
 })
 
