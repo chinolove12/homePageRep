@@ -161,7 +161,7 @@ REG確率：-
 <option>異色BIG</option>
 </select>
 
-<select id="trigger">
+<select id="triggers">
 <option value="">当選契機を選択</option>
 <option>単独</option>
 <option>一枚役A</option>
@@ -196,7 +196,7 @@ function addRecord(){
 
 const spin=document.getElementById("spin").value
 const role=document.getElementById("role").value
-const trigger=document.getElementById("trigger").value
+const triggers=document.getElementById("triggers").value
 const memo=document.getElementById("memo").value
 
 if(!spin||!role){
@@ -207,7 +207,7 @@ return
 const data={
 spin:Number(spin),
 role:role,
-trigger:trigger,
+triggers:triggers,
 memo:memo
 }
 
@@ -226,7 +226,7 @@ function clearInput(){
 
 document.getElementById("spin").value=""
 document.getElementById("role").value=""
-document.getElementById("trigger").value=""
+document.getElementById("triggers").value=""
 document.getElementById("memo").value=""
 
 }
@@ -240,7 +240,7 @@ fetch(API_URL)
 records=data.map(r=>({
 spin:r[1],
 role:r[2],
-trigger:r[3],
+triggers:r[3],
 memo:r[4]
 }))
 
