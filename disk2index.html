@@ -1,1 +1,85 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>筒井大翔公式サイト</title>
+  <style>
 
+    /* 画面全体に背景画像 */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+      background: url("kame.jpg") no-repeat center center/cover;
+      height: 100vh;
+      color: white;
+      text-align: center;
+
+      /* 背景を暗くして文字を見やすく */
+      position: relative;
+    }
+
+    /* 暗いオーバーレイ */
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.45);
+      z-index: -1;
+    }
+
+    h1 {
+      margin-top: 40px;
+      font-size: 44px;
+      text-shadow: 0 2px 4px black;
+    }
+
+    .menu {
+      margin-top: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      padding: 0 20px;
+    }
+
+    /* スマホ向けの大きいボタン */
+    .menu a {
+      width: 100%;
+      padding: 100px 0; /* ←縦の余白を増やして高さ3倍に！ */
+      background-color: rgba(76,175,80,0.9);
+      color: white;
+      text-decoration: none;
+      border-radius: 12px;
+      font-size: 32px;
+      font-weight: bold;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+      transition: 0.2s;
+    }
+
+    .menu a:hover {
+      background-color: rgba(69,160,73,1);
+      transform: translateY(-3px);
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <h1>筒井大翔公式ホームページ</h1>
+
+  <div class="menu">
+    <a href="2ch.html">ディスクアップ２</a>
+    <a href="2ch-tokei.html">ディスクアップ２統計</a>
+    <a href="2ndindex.html">当選契機確認ツール</a>
+    <a href="hanabi.html">ディスクアップ2日報</a>
+    <a href="nippo.html">作業日報</a>
+    <a href="karendar.html">月間カレンダー</a>
+  </div>
+
+</body>
+</html>
