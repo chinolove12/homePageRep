@@ -72,9 +72,9 @@ const bonus = [
 "REG",
 "赤BIG",
 "青BIG",
-"黒BIG"
+"黒BIG",
+"異色"
 ]
-
 
 fetch(API)
 .then(r=>r.json())
@@ -92,6 +92,20 @@ html += "<th>"+b+"</th>"
 html += "</tr>"
 
 
+/* ===== グループ定義 ===== */
+
+const blueGroup =
+data.count["単独"]["青BIG"] +
+data.count["一枚役D"]["青BIG"]
+
+const blackGroup =
+data.count["単独"]["黒BIG"] +
+data.count["一枚役A"]["黒BIG"] +
+data.count["一枚役B"]["黒BIG"] +
+data.count["一枚役D"]["黒BIG"]
+
+/* ===== 表作成 ===== */
+
 flags.forEach(f=>{
 
 html += "<tr>"
@@ -99,16 +113,35 @@ html += "<td>"+f+"</td>"
 
 bonus.forEach(b=>{
 
-const c = data.count[f][b]
+let c = data.count?.[f]?.[b] ?? 0
 
-if(c==0){
+
+/* 青BIGグループ */
+if(b==="青BIG" && (f==="単独" || f==="一枚役D")){
+c = blueGroup
+}
+
+/* 黒BIGグループ */
+if(
+b==="黒BIG" &&
+(
+f==="単独" ||
+f==="一枚役A" ||
+f==="一枚役B" ||
+f==="一枚役D"
+)
+){
+c = blackGroup
+}
+
+
+if(c===0){
 
 html += "<td>-</td>"
 
 }else{
 
 const prob = Math.round(data.spin / c)
-
 html += "<td>1/"+prob+"</td>"
 
 }
@@ -118,7 +151,6 @@ html += "<td>1/"+prob+"</td>"
 html += "</tr>"
 
 })
-
 
 table.innerHTML = html
 
