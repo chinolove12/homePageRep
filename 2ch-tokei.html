@@ -22,7 +22,6 @@ table{
 margin:auto;
 border-collapse:collapse;
 background:white;
-margin-bottom:40px;
 }
 
 th,td{
@@ -51,10 +50,6 @@ color:#777;
 </head>
 
 <body>
-
-<h1>理論値設定</h1>
-
-<table id="theoryTable"></table>
 
 <h1>契機別ボーナス確率（実践値）</h1>
 
@@ -86,13 +81,12 @@ const bonus=[
 "異色"
 ]
 
-
-/* ===== 理論値入力 ===== */
+/* ===== 理論値 ===== */
 
 const theory = {
 
 "単独":{
-"REG":"1/16384",
+"REG":"",
 "赤BIG":"",
 "青BIG":"1/4096",
 "黒BIG":"1/8192",
@@ -101,7 +95,7 @@ const theory = {
 
 "一枚役A":{
 "REG":"",
-"赤BIG":"1/2048",
+"赤BIG":"",
 "青BIG":"",
 "黒BIG":"1/4096",
 "異色":""
@@ -182,47 +176,6 @@ const theory = {
 }
 
 
-/* ===== 理論値テーブル作成 ===== */
-
-function drawTheoryTable(){
-
-const table=document.getElementById("theoryTable")
-
-let html="<tr><th>フラグ</th>"
-
-bonus.forEach(b=>{
-html+="<th>"+b+"</th>"
-})
-
-html+="</tr>"
-
-flags.forEach(f=>{
-
-html+="<tr>"
-html+="<td>"+f+"</td>"
-
-bonus.forEach(b=>{
-
-html+=`<td>
-<input 
-style="width:80px"
-placeholder="1/xxx"
-oninput="theory['${f}']['${b}']=this.value">
-</td>`
-
-})
-
-html+="</tr>"
-
-})
-
-table.innerHTML=html
-
-}
-
-drawTheoryTable()
-
-
 /* ===== 実践値取得 ===== */
 
 fetch(API)
@@ -240,7 +193,7 @@ html+="<th>"+b+"</th>"
 html+="</tr>"
 
 
-/* グループ */
+/* ===== グループ ===== */
 
 const blueGroup=
 data.count["単独"]["青BIG"]+
@@ -288,10 +241,12 @@ actual="1/"+prob
 
 const t=theory[f][b]||""
 
-html+=`<td>
+html+=`
+<td>
 <div>${actual}</div>
-<div class="theory">(${t})</div>
-</td>`
+<div class="theory">${t?`(${t})`:""}</div>
+</td>
+`
 
 })
 
